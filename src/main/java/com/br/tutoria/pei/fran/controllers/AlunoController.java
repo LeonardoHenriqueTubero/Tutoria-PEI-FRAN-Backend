@@ -1,6 +1,6 @@
 package com.br.tutoria.pei.fran.controllers;
 
-import com.br.tutoria.pei.fran.entities.Aluno;
+import com.br.tutoria.pei.fran.dtos.AlunoDTO;
 import com.br.tutoria.pei.fran.service.AlunoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +21,8 @@ public class AlunoController {
     }
 
     @PostMapping
-    public ResponseEntity<Aluno> cadastrar(@RequestBody Aluno aluno) {
-        aluno = service.insert(aluno, aluno.getDadoFamilia(), aluno.getEndereco());
-        return ResponseEntity.ok(aluno);
+    public ResponseEntity<AlunoDTO> cadastrar(@RequestBody AlunoDTO dto) {
+        dto = service.insert(dto);
+        return ResponseEntity.ok(dto);
     }
 }

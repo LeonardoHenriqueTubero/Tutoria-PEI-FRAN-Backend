@@ -4,7 +4,6 @@ import com.br.tutoria.pei.fran.entities.DadosFamilia;
 
 public class DadosFamiliaDTO {
 
-    private Long id;
     private String pai;
     private String mae;
     private String responsavel;
@@ -16,7 +15,6 @@ public class DadosFamiliaDTO {
     public DadosFamiliaDTO() {}
 
     public DadosFamiliaDTO(Long id, String pai, String mae, String responsavel, String estruturaFamiliar, Integer numPai, Integer numMae, Integer numResponsavel) {
-        this.id = id;
         this.pai = pai;
         this.mae = mae;
         this.responsavel = responsavel;
@@ -27,7 +25,6 @@ public class DadosFamiliaDTO {
     }
 
     public DadosFamiliaDTO(DadosFamilia dadosFamilia) {
-        id = dadosFamilia.getId();
         pai = dadosFamilia.getPai();
         mae = dadosFamilia.getMae();
         responsavel = dadosFamilia.getResponsavel();
@@ -35,10 +32,6 @@ public class DadosFamiliaDTO {
         numPai = dadosFamilia.getNumPai();
         numMae = dadosFamilia.getNumMae();
         numResponsavel = dadosFamilia.getNumResponsavel();
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getPai() {

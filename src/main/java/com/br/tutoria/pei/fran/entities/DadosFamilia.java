@@ -35,7 +35,6 @@ public class DadosFamilia {
         this.numPai = numPai;
         this.numMae = numMae;
         this.numResponsavel = numResponsavel;
-        this.alunos = alunos;
     }
 
     public Long getId() {
@@ -104,6 +103,10 @@ public class DadosFamilia {
 
     public List<Aluno> getAlunos() {
         return alunos;
+    }
+
+    public void addAlunos(Aluno aluno) {
+        alunos.add(aluno);
     }
 
     @Override

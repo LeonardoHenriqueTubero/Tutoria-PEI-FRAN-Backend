@@ -14,9 +14,8 @@ import java.util.Set;
 public class Usuario {
 
     @Id
-    private Integer CPF;
+    private Integer cpf;
     private String nome;
-    private String papel;
 
     @OneToMany(mappedBy = "id.usuario")
     Set<Tutoria> tutorias = new HashSet<>();
@@ -24,18 +23,21 @@ public class Usuario {
     @OneToMany(mappedBy = "id.usuario")
     Set<RegistroAtendimento> registroAtendimentos = new HashSet<>();
 
-    public Usuario(Integer CPF, String nome, String papel) {
-        this.CPF = CPF;
+    public Usuario(Integer cpf, String nome) {
+        this.cpf = cpf;
         this.nome = nome;
-        this.papel = papel;
     }
 
-    public Integer getCPF() {
-        return CPF;
+    public Usuario() {
+
     }
 
-    public void setCPF(Integer CPF) {
-        this.CPF = CPF;
+    public Integer getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(Integer cpf) {
+        this.cpf = cpf;
     }
 
     public String getNome() {
@@ -44,14 +46,6 @@ public class Usuario {
 
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-    public String getPapel() {
-        return papel;
-    }
-
-    public void setPapel(String papel) {
-        this.papel = papel;
     }
 
     public Set<Tutoria> getTutorias() {

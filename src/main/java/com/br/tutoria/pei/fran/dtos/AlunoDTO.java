@@ -15,13 +15,15 @@ public class AlunoDTO {
     private String transporte;
     private String projetoVida;
     private String serie;
+    private String endereco;
+    private String imgUrl;
 
     private DadosFamiliaDTO dadoFamilia;
-    private EnderecoDTO endereco;
+    private EscolaridadeDTO escolaridade;
 
     public AlunoDTO() {}
 
-    public AlunoDTO(Long ra, String nome, String email, LocalDate dataNasc, Integer idade, Integer telefone, String transporte, String projetoVida, String serie, DadosFamiliaDTO dadosFamilia, EnderecoDTO endereco) {
+    public AlunoDTO(Long ra, String nome, String email, LocalDate dataNasc, Integer idade, Integer telefone, String transporte, String projetoVida, String serie, DadosFamiliaDTO dadosFamilia, String endereco, EscolaridadeDTO escolaridade, String imgUrl) {
         this.ra = ra;
         this.nome = nome;
         this.email = email;
@@ -33,6 +35,8 @@ public class AlunoDTO {
         this.serie = serie;
         this.dadoFamilia = dadosFamilia;
         this.endereco = endereco;
+        this.escolaridade = escolaridade;
+        this.imgUrl = imgUrl;
     }
 
     public AlunoDTO(Aluno aluno) {
@@ -46,7 +50,9 @@ public class AlunoDTO {
         projetoVida = aluno.getProjetoVida();
         serie = aluno.getSerie();
         dadoFamilia = new DadosFamiliaDTO(aluno.getDadoFamilia());
-        endereco = new EnderecoDTO(aluno.getEndereco());
+        escolaridade = new EscolaridadeDTO(aluno.getEscolaridade());
+        endereco = aluno.getEndereco();
+        imgUrl = aluno.getImgUrl();
     }
 
     public Long getRa() {
@@ -89,7 +95,15 @@ public class AlunoDTO {
         return dadoFamilia;
     }
 
-    public EnderecoDTO getEndereco() {
+    public String getEndereco() {
         return endereco;
+    }
+
+    public EscolaridadeDTO getEscolaridade() {
+        return escolaridade;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
     }
 }

@@ -1,11 +1,11 @@
 package com.br.tutoria.pei.fran.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -22,26 +22,21 @@ public class Aluno {
     private String transporte;
     private String projetoVida;
     private String serie;
+    private String endereco;
+    private String imgUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dado_familia_id")
     private DadosFamilia dadoFamilia;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "endereco_id")
-    private Endereco endereco;
-
     @OneToMany(mappedBy = "aluno")
-    @JsonIgnore
     private List<Avaliacao> avaliacoes;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     private Escolaridade escolaridade;
 
-    @OneToOne
-    @JsonIgnore
+    @OneToOne(fetch = FetchType.LAZY)
     private Participacao participacao;
-
 
     @OneToMany(mappedBy = "id.aluno")
     Set<Tutoria> tutorias = new HashSet<>();
@@ -49,9 +44,13 @@ public class Aluno {
     @OneToMany(mappedBy = "id.aluno")
     Set<RegistroAtendimento> registroAtendimentos = new HashSet<>();
 
+    public Aluno(String endereco) {
+        this.endereco = endereco;
+    }
+
     public Aluno() {}
 
-    public Aluno(Long ra, String nome, String email, LocalDate dataNasc, Integer idade, Integer telefone, String transporte, String projetoVida, String serie, DadosFamilia dadoFamilia, Endereco endereco) {
+    public Aluno(Long ra, String nome, String email, LocalDate dataNasc, Integer idade, Integer telefone, String transporte, String projetoVida, String serie, String endereco, DadosFamilia dadoFamilia, Escolaridade escolaridade, String imgUrl) {
         this.ra = ra;
         this.nome = nome;
         this.email = email;
@@ -61,8 +60,10 @@ public class Aluno {
         this.transporte = transporte;
         this.projetoVida = projetoVida;
         this.serie = serie;
-        this.dadoFamilia = dadoFamilia;
         this.endereco = endereco;
+        this.dadoFamilia = dadoFamilia;
+        this.escolaridade = escolaridade;
+        this.imgUrl = imgUrl;
     }
 
     public Long getRa() {
@@ -145,14 +146,6 @@ public class Aluno {
         this.dadoFamilia = dadoFamilia;
     }
 
-    public Endereco getEndereco() {
-        return endereco;
-    }
-
-    public void setEndereco(Endereco endereco) {
-        this.endereco = endereco;
-    }
-
     public Escolaridade getEscolaridade() {
         return escolaridade;
     }
@@ -161,7 +154,6 @@ public class Aluno {
         this.escolaridade = escolaridade;
     }
 
-    @JsonIgnore
     public List<Avaliacao> getAvaliacoes() {
         return avaliacoes;
     }
@@ -170,23 +162,47 @@ public class Aluno {
         this.avaliacoes.add(avaliacao);
     }
 
-    @JsonIgnore
     public Set<Tutoria> getTutorias() {
         return tutorias;
     }
 
-    @JsonIgnore
     public List<Usuario> getUsuarioTutorias() {
         return tutorias.stream().map(Tutoria::getUsuario).toList();
     }
 
-    @JsonIgnore
     public Set<RegistroAtendimento> getRegistroAtendimentos() {
         return registroAtendimentos;
     }
 
-    @JsonIgnore
     public List<Usuario> getUsuarioRegistroAtendimentos() {
         return registroAtendimentos.stream().map(RegistroAtendimento::getUsuario).toList();
+    }
+
+    public String getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Aluno aluno = (Aluno) o;
+        return Objects.equals(ra, aluno.ra);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(ra);
     }
 }

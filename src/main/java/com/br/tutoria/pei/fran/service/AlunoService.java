@@ -3,10 +3,10 @@ package com.br.tutoria.pei.fran.service;
 import com.br.tutoria.pei.fran.dtos.AlunoDTO;
 import com.br.tutoria.pei.fran.entities.Aluno;
 import com.br.tutoria.pei.fran.entities.DadosFamilia;
-import com.br.tutoria.pei.fran.entities.Endereco;
+import com.br.tutoria.pei.fran.entities.Escolaridade;
 import com.br.tutoria.pei.fran.repository.AlunoRepository;
 import com.br.tutoria.pei.fran.repository.DadosFamiliaRepository;
-import com.br.tutoria.pei.fran.repository.EnderecoRepository;
+import com.br.tutoria.pei.fran.repository.EscolaridadeRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,32 +16,28 @@ public class AlunoService {
 
     private final AlunoRepository repository;
     private final DadosFamiliaRepository dadosFamiliarepository;
-    private final EnderecoRepository enderecoRepository;
+    private final EscolaridadeRepository escolaridadeRepository;
 
     @Autowired
-    public AlunoService(AlunoRepository repository, DadosFamiliaRepository dadosFamiliarepository, EnderecoRepository enderecoRepository) {
+    public AlunoService(AlunoRepository repository, DadosFamiliaRepository dadosFamiliarepository, EscolaridadeRepository escolaridadeRepository) {
         this.repository = repository;
         this.dadosFamiliarepository = dadosFamiliarepository;
-        this.enderecoRepository = enderecoRepository;
+        this.escolaridadeRepository = escolaridadeRepository;
     }
 
     @Transactional
     public AlunoDTO insert(AlunoDTO dto) {
-        DadosFamilia familia = new DadosFamilia();
-        Endereco endereco = new Endereco();
-
-        familia = getDadosFamilia(dto);
-        dadosFamiliarepository.save(familia);
-
-        endereco = getEndereco(dto);
-        enderecoRepository.save(endereco);
+        DadosFamilia familia = getDadosFamilia(dto);
+        Escolaridade escolaridade = getEscolaridade(dto);
 
         Aluno aluno = new Aluno();
         dtoToEntity(dto, aluno);
         familia.addAlunos(aluno);
-        endereco.getAlunos().add(aluno);
+        escolaridade.setAluno(aluno);
         aluno.setDadoFamilia(familia);
-        aluno.setEndereco(endereco);
+        aluno.setEscolaridade(escolaridade);
+        familia = dadosFamiliarepository.save(familia);
+        escolaridade = escolaridadeRepository.save(escolaridade);
         aluno = repository.save(aluno);
         return new AlunoDTO(aluno);
     }
@@ -56,6 +52,8 @@ public class AlunoService {
         entity.setTransporte(dto.getTransporte());
         entity.setProjetoVida(dto.getProjetoVida());
         entity.setSerie(dto.getSerie());
+        entity.setEndereco(dto.getEndereco());
+        entity.setImgUrl(dto.getImgUrl());
     }
 
     private static DadosFamilia getDadosFamilia(AlunoDTO dto) {
@@ -70,12 +68,22 @@ public class AlunoService {
         return familia;
     }
 
-    private static Endereco getEndereco(AlunoDTO dto) {
-        Endereco endereco = new Endereco();
-        endereco.setRua(dto.getEndereco().getRua());
-        endereco.setBairro(dto.getEndereco().getBairro());
-        endereco.setCidade(dto.getEndereco().getCidade());
-        endereco.setCep(dto.getEndereco().getCep());
-        return endereco;
+    private static Escolaridade getEscolaridade(AlunoDTO dto) {
+        Escolaridade escolaridade = new Escolaridade();
+        escolaridade.setContatoFora(dto.getEscolaridade().getContatoFora());
+        escolaridade.setDifAprendizagem(dto.getEscolaridade().getDifAprendizagem());
+        escolaridade.setApoioPedagogico(dto.getEscolaridade().getApoioPedagogico());
+        escolaridade.setAtividadeExtra(dto.getEscolaridade().getAtividadeExtra());
+        escolaridade.setDifLocomotiva(dto.getEscolaridade().getDifLocomotiva());
+        escolaridade.setDifVisao(dto.getEscolaridade().getDifVisao());
+        escolaridade.setDifAtencao(dto.getEscolaridade().getDifAtencao());
+        escolaridade.setDifFala(dto.getEscolaridade().getDifFala());
+        escolaridade.setDifEscrita(dto.getEscolaridade().getDifEscrita());
+        escolaridade.setAdaptacaoGrupo(dto.getEscolaridade().getAdaptacaoGrupo());
+        escolaridade.setReprovado(dto.getEscolaridade().getReprovado());
+        escolaridade.setSerieAnoReprovado(dto.getEscolaridade().getSerieAnoReprovado());
+        escolaridade.getDisciplinasFacilidade().addAll(dto.getEscolaridade().getDisciplinasFacilidade());
+        escolaridade.getDisciplinasDificuldade().addAll(dto.getEscolaridade().getDisciplinasDificuldade());
+        return escolaridade;
     }
 }

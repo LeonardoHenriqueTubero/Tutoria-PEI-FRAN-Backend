@@ -18,7 +18,7 @@ public class Participacao {
     private Boolean alunoGremista;
     private Boolean jovemAcolhedor;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "participacao")
     private Aluno aluno;
 
     public Participacao() {}

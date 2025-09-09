@@ -8,6 +8,7 @@ import com.br.tutoria.pei.fran.entities.Escolaridade;
 import com.br.tutoria.pei.fran.repository.AlunoRepository;
 import com.br.tutoria.pei.fran.repository.DadosFamiliaRepository;
 import com.br.tutoria.pei.fran.repository.EscolaridadeRepository;
+import com.br.tutoria.pei.fran.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,7 +73,7 @@ public class AlunoService {
 
     @Transactional(readOnly = true)
     public AlunoDTO getAlunosByRa(Long ra) {
-        Aluno aluno = repository.findById(ra).orElseThrow(() -> new RuntimeException("Recurso não encontrado"));
+        Aluno aluno = repository.findById(ra).orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado"));
         return new AlunoDTO(aluno);
     }
 

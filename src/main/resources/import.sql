@@ -5,7 +5,7 @@ INSERT INTO tb_dados_familia (pai, mae, responsavel, estrutura_familiar, num_pai
 INSERT INTO tb_dados_familia (pai, mae, responsavel, estrutura_familiar, num_pai, num_mae, num_responsavel) VALUES ('Nélio Alves', 'Carla Alves', 'Henrique Alves', 'separados, mora com o avô', NULL, NULL, 234567890);
 INSERT INTO tb_dados_familia (pai, mae, responsavel, estrutura_familiar, num_pai, num_mae, num_responsavel) VALUES ('Carlos de Souza', 'Maria de Souza', '', 'casados', 123456789, 123456789, NULL);
 
-INSERT INTO tb_aluno (ra, nome, email, data_nasc, idade, telefone, transporte, projeto_vida, serie, dado_familia_id, endereco) VALUES (123456789, 'Leandro Mendes', '123456789@exemplo.com', '2011-05-01', 14, 987654321, 'A pé', 'Ser médico', '8 ano A', 1, 'Rua A');
-INSERT INTO tb_aluno (ra, nome, email, data_nasc, idade, telefone, transporte, projeto_vida, serie, dado_familia_id, endereco) VALUES (234567890, 'Sara Alvez', '234567890@exemplo.com', '2012-05-01', 13, 012345678, 'De carro', 'Ser juíza', '7 ano B', 2, 'Rua B');
-INSERT INTO tb_aluno (ra, nome, email, data_nasc, idade, telefone, transporte, projeto_vida, serie, dado_familia_id, endereco) VALUES (987654321, 'João de Souza', '987654321@exemplo.com', '2013-06-23', 12, 321654987, 'A pé', 'Ser programador', '6 ano C', 3, 'Rua C');
-INSERT INTO tb_aluno (ra, nome, email, data_nasc, idade, telefone, transporte, projeto_vida, serie, dado_familia_id, endereco) VALUES (543219876, 'Gustavo Lima', '543219876@exemplo.com', '2010-02-01', 15, 432198765, 'De bicicleta', 'Ser cantor', '9 ano D', 2, 'Rua D');
+INSERT INTO tb_escolaridade(contato_fora, dif_aprendizagem, apoio_pedagogico, disciplinas_facilidade, disciplinas_dificuldade, atividade_extra, dif_locomotiva, dif_visao, dif_atencao, dif_fala, dif_escrita, adaptacao_grupo, reprovado) VALUES (true, true, true, '[matemática, portugues]', '[geografia]',  false, false, false, false, false, false, true, false);
+
+INSERT INTO tb_aluno (ra, nome, email, data_nasc, idade, telefone, transporte, projeto_vida, serie, dado_familia_id, endereco, img_url, escolaridade_id) VALUES (123456789, 'Leandro Mendes', '123456789@exemplo.com', '2011-05-01', 14, 987654321, 'A pé', 'Ser médico', '8 ano A', 1, 'Rua A', 'imagem1.png', 1);
+

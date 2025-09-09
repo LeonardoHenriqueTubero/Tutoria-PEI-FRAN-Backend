@@ -1,15 +1,18 @@
 package com.br.tutoria.pei.fran.service;
 
 import com.br.tutoria.pei.fran.dtos.AlunoDTO;
+import com.br.tutoria.pei.fran.dtos.AlunoMinDTO;
 import com.br.tutoria.pei.fran.entities.Aluno;
 import com.br.tutoria.pei.fran.entities.DadosFamilia;
 import com.br.tutoria.pei.fran.entities.Escolaridade;
 import com.br.tutoria.pei.fran.repository.AlunoRepository;
 import com.br.tutoria.pei.fran.repository.DadosFamiliaRepository;
 import com.br.tutoria.pei.fran.repository.EscolaridadeRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class AlunoService {
@@ -27,8 +30,11 @@ public class AlunoService {
 
     @Transactional
     public AlunoDTO insert(AlunoDTO dto) {
-        DadosFamilia familia = getDadosFamilia(dto);
-        Escolaridade escolaridade = getEscolaridade(dto);
+        DadosFamilia familia = new DadosFamilia();
+        Escolaridade escolaridade = new Escolaridade();
+
+        setDadosFamilia(familia, dto);
+        setEscolaridade(escolaridade, dto);
 
         Aluno aluno = new Aluno();
         dtoToEntity(dto, aluno);
@@ -39,6 +45,34 @@ public class AlunoService {
         familia = dadosFamiliarepository.save(familia);
         escolaridade = escolaridadeRepository.save(escolaridade);
         aluno = repository.save(aluno);
+        return new AlunoDTO(aluno);
+    }
+
+    @Transactional
+    public AlunoDTO update(Long ra, AlunoDTO dto) {
+        Aluno aluno = repository.getReferenceById(ra);
+
+        DadosFamilia familia = dadosFamiliarepository.getReferenceById(aluno.getDadoFamilia().getId());
+        Escolaridade escolaridade = escolaridadeRepository.getReferenceById(aluno.getEscolaridade().getId());
+
+        dtoToEntity(dto, aluno);
+        setDadosFamilia(familia, dto);
+        setEscolaridade(escolaridade, dto);
+
+        familia = dadosFamiliarepository.save(familia);
+        escolaridade = escolaridadeRepository.save(escolaridade);
+        aluno = repository.save(aluno);
+        return new AlunoDTO(aluno);
+    }
+
+    @Transactional(readOnly = true)
+    public List<AlunoMinDTO> getAllNames() {
+        return repository.getAllNamesAndImage();
+    }
+
+    @Transactional(readOnly = true)
+    public AlunoDTO getAlunosByRa(Long ra) {
+        Aluno aluno = repository.findById(ra).orElseThrow(() -> new RuntimeException("Recurso não encontrado"));
         return new AlunoDTO(aluno);
     }
 
@@ -56,8 +90,7 @@ public class AlunoService {
         entity.setImgUrl(dto.getImgUrl());
     }
 
-    private static DadosFamilia getDadosFamilia(AlunoDTO dto) {
-        DadosFamilia familia = new DadosFamilia();
+    private static DadosFamilia setDadosFamilia(DadosFamilia familia, AlunoDTO dto) {
         familia.setPai(dto.getDadoFamilia().getPai());
         familia.setMae(dto.getDadoFamilia().getMae());
         familia.setResponsavel(dto.getDadoFamilia().getResponsavel());
@@ -68,8 +101,7 @@ public class AlunoService {
         return familia;
     }
 
-    private static Escolaridade getEscolaridade(AlunoDTO dto) {
-        Escolaridade escolaridade = new Escolaridade();
+    private static Escolaridade setEscolaridade(Escolaridade escolaridade, AlunoDTO dto) {
         escolaridade.setContatoFora(dto.getEscolaridade().getContatoFora());
         escolaridade.setDifAprendizagem(dto.getEscolaridade().getDifAprendizagem());
         escolaridade.setApoioPedagogico(dto.getEscolaridade().getApoioPedagogico());

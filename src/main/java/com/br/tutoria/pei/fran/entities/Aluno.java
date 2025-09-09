@@ -33,6 +33,7 @@ public class Aluno {
     private List<Avaliacao> avaliacoes;
 
     @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "escolaridade_id")
     private Escolaridade escolaridade;
 
     @OneToOne(fetch = FetchType.LAZY)

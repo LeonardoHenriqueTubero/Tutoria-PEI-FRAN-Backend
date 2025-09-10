@@ -8,9 +8,12 @@ import com.br.tutoria.pei.fran.entities.Escolaridade;
 import com.br.tutoria.pei.fran.repository.AlunoRepository;
 import com.br.tutoria.pei.fran.repository.DadosFamiliaRepository;
 import com.br.tutoria.pei.fran.repository.EscolaridadeRepository;
+import com.br.tutoria.pei.fran.service.exceptions.DatabaseException;
 import com.br.tutoria.pei.fran.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -31,7 +34,8 @@ public class AlunoService {
 
     @Transactional
     public AlunoDTO insert(AlunoDTO dto) {
-        DadosFamilia familia = new DadosFamilia();
+        DadosFamilia familia = dadosFamiliarepository.findPaiOrMaeOrResponsavel(dto.getDadoFamilia().getPai(),
+        dto.getDadoFamilia().getMae(), dto.getDadoFamilia().getResponsavel()).orElseGet(DadosFamilia::new);
         Escolaridade escolaridade = new Escolaridade();
 
         setDadosFamilia(familia, dto);
@@ -44,7 +48,6 @@ public class AlunoService {
         aluno.setDadoFamilia(familia);
         aluno.setEscolaridade(escolaridade);
         familia = dadosFamiliarepository.save(familia);
-        escolaridade = escolaridadeRepository.save(escolaridade);
         aluno = repository.save(aluno);
         return new AlunoDTO(aluno);
     }
@@ -52,7 +55,6 @@ public class AlunoService {
     @Transactional
     public AlunoDTO update(Long ra, AlunoDTO dto) {
         Aluno aluno = repository.getReferenceById(ra);
-
         DadosFamilia familia = dadosFamiliarepository.getReferenceById(aluno.getDadoFamilia().getId());
         Escolaridade escolaridade = escolaridadeRepository.getReferenceById(aluno.getEscolaridade().getId());
 
@@ -61,7 +63,6 @@ public class AlunoService {
         setEscolaridade(escolaridade, dto);
 
         familia = dadosFamiliarepository.save(familia);
-        escolaridade = escolaridadeRepository.save(escolaridade);
         aluno = repository.save(aluno);
         return new AlunoDTO(aluno);
     }
@@ -75,6 +76,20 @@ public class AlunoService {
     public AlunoDTO getAlunosByRa(Long ra) {
         Aluno aluno = repository.findById(ra).orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado"));
         return new AlunoDTO(aluno);
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public void delete(Long ra) {
+        if (!repository.existsById(ra)) {
+            throw new ResourceNotFoundException("Recurso não encontrado");
+        }
+        try {
+
+            repository.deleteById(ra);
+        }
+        catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Erro de integridade violada");
+        }
     }
 
     private void dtoToEntity(AlunoDTO dto, Aluno entity) {
@@ -91,7 +106,7 @@ public class AlunoService {
         entity.setImgUrl(dto.getImgUrl());
     }
 
-    private static DadosFamilia setDadosFamilia(DadosFamilia familia, AlunoDTO dto) {
+    private static void setDadosFamilia(DadosFamilia familia, AlunoDTO dto) {
         familia.setPai(dto.getDadoFamilia().getPai());
         familia.setMae(dto.getDadoFamilia().getMae());
         familia.setResponsavel(dto.getDadoFamilia().getResponsavel());
@@ -99,10 +114,9 @@ public class AlunoService {
         familia.setNumPai(dto.getDadoFamilia().getNumPai());
         familia.setNumMae(dto.getDadoFamilia().getNumMae());
         familia.setNumResponsavel(dto.getDadoFamilia().getNumResponsavel());
-        return familia;
     }
 
-    private static Escolaridade setEscolaridade(Escolaridade escolaridade, AlunoDTO dto) {
+    private static void setEscolaridade(Escolaridade escolaridade, AlunoDTO dto) {
         escolaridade.setContatoFora(dto.getEscolaridade().getContatoFora());
         escolaridade.setDifAprendizagem(dto.getEscolaridade().getDifAprendizagem());
         escolaridade.setApoioPedagogico(dto.getEscolaridade().getApoioPedagogico());
@@ -117,6 +131,5 @@ public class AlunoService {
         escolaridade.setSerieAnoReprovado(dto.getEscolaridade().getSerieAnoReprovado());
         escolaridade.getDisciplinasFacilidade().addAll(dto.getEscolaridade().getDisciplinasFacilidade());
         escolaridade.getDisciplinasDificuldade().addAll(dto.getEscolaridade().getDisciplinasDificuldade());
-        return escolaridade;
     }
 }

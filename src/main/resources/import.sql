@@ -1,5 +1,6 @@
 INSERT INTO tb_usuario (cpf, nome) VALUES (123456789, 'Rodrigo Soares');
 INSERT INTO tb_usuario (cpf, nome) VALUES (987654321, 'Matheus César');
+INSERT INTO tb_usuario (cpf, nome) VALUES (234567891, 'Paulo');
 
 INSERT INTO tb_dados_familia (pai, mae, responsavel, estrutura_familiar, num_pai, num_mae, num_responsavel) VALUES ('José Mendes', 'Andréia Mendes', '', 'separados, mora com a mãe', 987654321, 987654321, NULL);
 INSERT INTO tb_dados_familia (pai, mae, responsavel, estrutura_familiar, num_pai, num_mae, num_responsavel) VALUES ('Nélio Alves', 'Carla Alves', 'Henrique Alves', 'separados, mora com o avô', NULL, NULL, 234567890);

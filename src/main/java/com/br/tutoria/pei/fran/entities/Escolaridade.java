@@ -28,7 +28,7 @@ public class Escolaridade {
     private Boolean reprovado;
     private String serieAnoReprovado;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     private Aluno aluno;
 
     public Escolaridade() {}
@@ -178,6 +178,28 @@ public class Escolaridade {
 
     public void setAluno(Aluno aluno) {
         this.aluno = aluno;
+    }
+
+    @Override
+    public String toString() {
+        return "Escolaridade{" +
+                "id=" + id +
+                ", contatoFora=" + contatoFora +
+                ", difAprendizagem=" + difAprendizagem +
+                ", apoioPedagogico=" + apoioPedagogico +
+                ", disciplinasFacilidade=" + disciplinasFacilidade +
+                ", disciplinasDificuldade=" + disciplinasDificuldade +
+                ", atividadeExtra=" + atividadeExtra +
+                ", difLocomotiva=" + difLocomotiva +
+                ", difVisao=" + difVisao +
+                ", difAtencao=" + difAtencao +
+                ", difFala=" + difFala +
+                ", difEscrita=" + difEscrita +
+                ", adaptacaoGrupo=" + adaptacaoGrupo +
+                ", reprovado=" + reprovado +
+                ", serieAnoReprovado='" + serieAnoReprovado + '\'' +
+                ", aluno=" + aluno +
+                '}';
     }
 
     @Override

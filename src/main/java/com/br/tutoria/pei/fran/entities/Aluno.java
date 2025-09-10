@@ -32,7 +32,7 @@ public class Aluno {
     @OneToMany(mappedBy = "aluno")
     private List<Avaliacao> avaliacoes;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     @JoinColumn(name = "escolaridade_id")
     private Escolaridade escolaridade;
 

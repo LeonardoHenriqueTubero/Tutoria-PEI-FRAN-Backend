@@ -46,4 +46,10 @@ public class AlunoController {
         dto = service.update(id, dto);
         return ResponseEntity.ok(dto);
     }
+
+    @DeleteMapping(value = "/{ra}")
+    public ResponseEntity<Void> delete(@PathVariable Long ra) {
+        service.delete(ra);
+        return ResponseEntity.noContent().build();
+    }
 }

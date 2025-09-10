@@ -21,7 +21,7 @@ public class DadosFamilia {
     private Integer numMae;
     private Integer numResponsavel;
 
-    @OneToMany(mappedBy = "dadoFamilia")
+    @OneToMany(mappedBy = "dadoFamilia", cascade = CascadeType.ALL)
     private List<Aluno> alunos = new ArrayList<>();
 
     public DadosFamilia() {}

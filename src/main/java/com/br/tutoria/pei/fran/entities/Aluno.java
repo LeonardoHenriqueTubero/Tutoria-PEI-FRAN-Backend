@@ -25,14 +25,14 @@ public class Aluno {
     private String endereco;
     private String imgUrl;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "dado_familia_id")
     private DadosFamilia dadoFamilia;
 
     @OneToMany(mappedBy = "aluno")
     private List<Avaliacao> avaliacoes;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "escolaridade_id")
     private Escolaridade escolaridade;
 
@@ -193,6 +193,14 @@ public class Aluno {
 
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
+    }
+
+    @Override
+    public String toString() {
+        return "Aluno{" +
+                "ra=" + ra +
+                ", nome='" + nome + '\'' +
+                '}';
     }
 
     @Override

@@ -34,6 +34,9 @@ public class AlunoService {
 
     @Transactional
     public AlunoDTO insert(AlunoDTO dto) {
+        if (repository.existsById(dto.getRa())) {
+            throw new DatabaseException("Entidade já criada!");
+        }
         DadosFamilia familia = dadosFamiliarepository.findPaiOrMaeOrResponsavel(dto.getDadoFamilia().getPai(),
         dto.getDadoFamilia().getMae(), dto.getDadoFamilia().getResponsavel()).orElseGet(DadosFamilia::new);
         Escolaridade escolaridade = new Escolaridade();
@@ -47,7 +50,7 @@ public class AlunoService {
         escolaridade.setAluno(aluno);
         aluno.setDadoFamilia(familia);
         aluno.setEscolaridade(escolaridade);
-        familia = dadosFamiliarepository.save(familia);
+
         aluno = repository.save(aluno);
         return new AlunoDTO(aluno);
     }
@@ -62,8 +65,8 @@ public class AlunoService {
         setDadosFamilia(familia, dto);
         setEscolaridade(escolaridade, dto);
 
-        familia = dadosFamiliarepository.save(familia);
         aluno = repository.save(aluno);
+        aluno.getDadoFamilia().getAlunos().forEach(System.out::println);
         return new AlunoDTO(aluno);
     }
 
@@ -84,7 +87,6 @@ public class AlunoService {
             throw new ResourceNotFoundException("Recurso não encontrado");
         }
         try {
-
             repository.deleteById(ra);
         }
         catch (DataIntegrityViolationException e) {

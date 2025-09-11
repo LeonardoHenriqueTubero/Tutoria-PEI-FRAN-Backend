@@ -41,7 +41,7 @@ public class AlunoController {
         return ResponseEntity.ok(result);
     }
 
-    @PutMapping(value = "/{id}")
+    @PutMapping(value = "/{ra}")
     public ResponseEntity<AlunoDTO> insert(@PathVariable Long id, @RequestBody AlunoDTO dto) {
         dto = service.update(id, dto);
         return ResponseEntity.ok(dto);

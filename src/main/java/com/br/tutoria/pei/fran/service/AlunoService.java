@@ -9,6 +9,7 @@ import com.br.tutoria.pei.fran.repository.AlunoRepository;
 import com.br.tutoria.pei.fran.repository.DadosFamiliaRepository;
 import com.br.tutoria.pei.fran.repository.EscolaridadeRepository;
 import com.br.tutoria.pei.fran.service.exceptions.DatabaseException;
+import com.br.tutoria.pei.fran.service.exceptions.EntityAlreadyExistingException;
 import com.br.tutoria.pei.fran.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -35,7 +36,7 @@ public class AlunoService {
     @Transactional
     public AlunoDTO insert(AlunoDTO dto) {
         if (repository.existsById(dto.getRa())) {
-            throw new DatabaseException("Entidade já criada!");
+            throw new EntityAlreadyExistingException("Entidade já criada!");
         }
         DadosFamilia familia = dadosFamiliarepository.findPaiOrMaeOrResponsavel(dto.getDadoFamilia().getPai(),
         dto.getDadoFamilia().getMae(), dto.getDadoFamilia().getResponsavel()).orElseGet(DadosFamilia::new);

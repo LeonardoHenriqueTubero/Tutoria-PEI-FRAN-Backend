@@ -1,5 +1,7 @@
 package com.br.tutoria.pei.fran.dtos;
 
+import com.br.tutoria.pei.fran.entities.Usuario;
+
 public class UsuarioDTO {
     private Integer cpf;
     private String nome;
@@ -9,6 +11,11 @@ public class UsuarioDTO {
     public UsuarioDTO(Integer cpf, String nome) {
         this.cpf = cpf;
         this.nome = nome;
+    }
+
+    public UsuarioDTO(Usuario usuario) {
+        cpf = usuario.getCpf();
+        nome = usuario.getNome();
     }
 
     public Integer getCpf() {

@@ -1,31 +1,36 @@
 package com.br.tutoria.pei.fran.controllers;
-import com.br.tutoria.pei.fran.dtos.UsuarioDTO;
-import com.br.tutoria.pei.fran.repository.UsuarioRepository;
-import org.springframework.web.bind.annotation.*;
 
+import com.br.tutoria.pei.fran.dtos.UsuarioDTO;
+import com.br.tutoria.pei.fran.service.UsuarioService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 import java.util.List;
 
 @RestController
 @RequestMapping("/usuarios")
 public class UsuairoController {
 
-    public final UsuarioRepository usuarioRepository;
+    public final UsuarioService service;
 
-    public UsuairoController(UsuarioRepository usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
+    @Autowired
+    public UsuairoController(UsuarioService service) {
+        this.service = service;
     }
 
     @GetMapping
-    public List<UsuarioDTO> listaUsuarios() {
-        return usuarioRepository.findAll().stream()
-                .map(usuario -> new UsuarioDTO(usuario.getCpf(), usuario.getNome()))
-                .toList();
+    public ResponseEntity<List<UsuarioDTO>> listaUsuarios() {
+        List<UsuarioDTO> dtos = service.findAll();
+        return ResponseEntity.ok(dtos);
     }
 
     @PostMapping
-    public UsuarioDTO adicionarUsuario(@RequestBody UsuarioDTO usuarioDTO) {
-        UsuarioDTO usuarioNovo = new UsuarioDTO();{
-        return usuarioNovo;
-        }
+    public ResponseEntity<UsuarioDTO> adicionarUsuario(@RequestBody UsuarioDTO usuarioDTO) {
+        UsuarioDTO dto = service.insert(usuarioDTO);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getCpf()).toUri();
+        return ResponseEntity.created(uri).body(dto);
     }
 }

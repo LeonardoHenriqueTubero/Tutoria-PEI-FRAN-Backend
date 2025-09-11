@@ -2,6 +2,7 @@ package com.br.tutoria.pei.fran.controllers.handlers;
 
 import com.br.tutoria.pei.fran.dtos.StandardError;
 import com.br.tutoria.pei.fran.service.exceptions.DatabaseException;
+import com.br.tutoria.pei.fran.service.exceptions.EntityAlreadyExistingException;
 import com.br.tutoria.pei.fran.service.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,18 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(DatabaseException.class)
     public ResponseEntity<StandardError> database(DatabaseException e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
+        StandardError err = new StandardError(
+                Instant.now(),
+                status.value(),
+                e.getMessage(),
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(EntityAlreadyExistingException.class)
+    public ResponseEntity<StandardError> entityAlreadyExisting(EntityAlreadyExistingException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.CONFLICT;
         StandardError err = new StandardError(
                 Instant.now(),
                 status.value(),

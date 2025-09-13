@@ -1,13 +1,11 @@
 package com.br.tutoria.pei.fran.controllers;
 
-import com.br.tutoria.pei.fran.dtos.AutenticacaoDTO;
+
 import com.br.tutoria.pei.fran.dtos.UsuarioDTO;
-import com.br.tutoria.pei.fran.entities.Usuario;
+
 import com.br.tutoria.pei.fran.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 

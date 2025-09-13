@@ -1,30 +1,21 @@
 package com.br.tutoria.pei.fran.entities;
 
-import com.br.tutoria.pei.fran.Enums.UsuarioRole;
-import jakarta.persistence.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
+import jakarta.persistence.*;
+
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "tb_usuario")
-public class Usuario implements UserDetails {
+public class Usuario  {
 
     @Id
     private Integer cpf;
     private String nome;
-    private UsuarioRole role;
 
-   /* public User(String nome, Integer cpf, UsuarioRole role) {
-        this.nome = nome;
-        this.cpf = cpf;
-        this.role = role;
-    }*/
 
     @OneToMany(mappedBy = "id.usuario")
     Set<Tutoria> tutorias = new HashSet<>();
@@ -32,15 +23,15 @@ public class Usuario implements UserDetails {
     @OneToMany(mappedBy = "id.usuario")
     Set<RegistroAtendimento> registroAtendimentos = new HashSet<>();
 
-    public Usuario(Integer cpf, String nome, UsuarioRole role) {
+    public Usuario(Integer cpf, String nome) {
         this.cpf = cpf;
         this.nome = nome;
-        this.role = role;
     }
 
     public Usuario() {
 
     }
+
 
     public Integer getCpf() {
         return cpf;
@@ -73,43 +64,5 @@ public class Usuario implements UserDetails {
 
     public List<Aluno> getAlunosRegistroAtendimentos() {
         return registroAtendimentos.stream().map(RegistroAtendimento::getAluno).toList();
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        if(this.role == UsuarioRole.COORDENADOR) {
-            return List.of(new SimpleGrantedAuthority("ROLE_COORDENADOR"), new SimpleGrantedAuthority("ROLE_PROFESSOR"));
-        }
-        else return List.of(new SimpleGrantedAuthority("ROLE_PROFESSOR"));
-    }
-
-    @Override
-    public String getPassword() {
-        return "";
-    }
-
-    @Override
-    public String getUsername() {
-        return nome;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return  true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return  true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return  true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
     }
 }

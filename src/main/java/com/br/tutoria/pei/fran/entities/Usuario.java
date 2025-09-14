@@ -32,7 +32,6 @@ public class Usuario  {
 
     }
 
-
     public Integer getCpf() {
         return cpf;
     }

@@ -3,10 +3,7 @@ package com.br.tutoria.pei.fran.entities;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "tb_aluno")
@@ -29,14 +26,15 @@ public class Aluno {
     @JoinColumn(name = "dado_familia_id")
     private DadosFamilia dadoFamilia;
 
-    @OneToMany(mappedBy = "aluno")
+    @OneToMany(mappedBy = "aluno", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Avaliacao> avaliacoes;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "escolaridade_id")
     private Escolaridade escolaridade;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "participacao_id")
     private Participacao participacao;
 
     @OneToMany(mappedBy = "id.aluno")
@@ -45,9 +43,12 @@ public class Aluno {
     @OneToMany(mappedBy = "id.aluno")
     Set<RegistroAtendimento> registroAtendimentos = new HashSet<>();
 
-    public Aluno(String endereco) {
-        this.endereco = endereco;
-    }
+    @OneToMany(mappedBy = "aluno", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Leitura> leituras = new ArrayList<>();
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "ocorrencias_id")
+    private Ocorrencia ocorrencias;
 
     public Aluno() {}
 
@@ -169,6 +170,14 @@ public class Aluno {
 
     public void addAvaliacao(Avaliacao avaliacao) {
         this.avaliacoes.add(avaliacao);
+    }
+
+    public List<Leitura> getLeituras() {
+        return leituras;
+    }
+
+    public void addLeitura(Leitura leitura) {
+        leituras.add(leitura);
     }
 
     public Set<Tutoria> getTutorias() {

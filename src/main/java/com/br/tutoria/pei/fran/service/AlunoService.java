@@ -2,11 +2,9 @@ package com.br.tutoria.pei.fran.service;
 
 import com.br.tutoria.pei.fran.dtos.AlunoDTO;
 import com.br.tutoria.pei.fran.dtos.AlunoMinDTO;
+import com.br.tutoria.pei.fran.dtos.AvaliacaoDTO;
 import com.br.tutoria.pei.fran.dtos.ParticipacaoDTO;
-import com.br.tutoria.pei.fran.entities.Aluno;
-import com.br.tutoria.pei.fran.entities.DadosFamilia;
-import com.br.tutoria.pei.fran.entities.Escolaridade;
-import com.br.tutoria.pei.fran.entities.Participacao;
+import com.br.tutoria.pei.fran.entities.*;
 import com.br.tutoria.pei.fran.repository.AlunoRepository;
 import com.br.tutoria.pei.fran.repository.DadosFamiliaRepository;
 import com.br.tutoria.pei.fran.repository.EscolaridadeRepository;
@@ -53,6 +51,7 @@ public class AlunoService {
         escolaridade.setAluno(aluno);
         aluno.setDadoFamilia(familia);
         aluno.setEscolaridade(escolaridade);
+        aluno.setParticipacao(new Participacao());
 
         aluno = repository.save(aluno);
         return new AlunoDTO(aluno);
@@ -120,6 +119,37 @@ public class AlunoService {
         return new ParticipacaoDTO(aluno.getParticipacao());
     }
 
+    @Transactional(readOnly = true)
+    public ParticipacaoDTO getParticipacao(Long ra) {
+        Aluno aluno = repository.findById(ra).orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado"));
+
+        return new ParticipacaoDTO(aluno.getParticipacao());
+    }
+
+    @Transactional
+    public AvaliacaoDTO addAvaliacao(Long ra, AvaliacaoDTO avaliacaoDTO) {
+        Aluno aluno = repository.getReferenceById(ra);
+        Avaliacao avaliacao = new Avaliacao();
+
+        dtoToAvaliacao(avaliacao, avaliacaoDTO);
+
+        aluno.addAvaliacao(avaliacao);
+        avaliacao.setAluno(aluno);
+
+        aluno = repository.save(aluno);
+
+        return new AvaliacaoDTO(avaliacao);
+    }
+
+    @Transactional(readOnly = true)
+    public List<AvaliacaoDTO> getAllAvaliacoes(Long ra) {
+        Aluno aluno = repository.findById(ra).orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado"));
+
+        return aluno.getAvaliacoes().stream().map(AvaliacaoDTO::new).toList();
+    }
+
+
+
     private void dtoToEntity(AlunoDTO dto, Aluno entity) {
         entity.setRa(dto.getRa());
         entity.setNome(dto.getNome());
@@ -172,5 +202,12 @@ public class AlunoService {
         participacao.setLiderTurma2(dto.getLiderTurma2());
         participacao.setJovemAcolhedor1(dto.getJovemAcolhedor1());
         participacao.setJovemAcolhedor2(dto.getJovemAcolhedor2());
+    }
+
+    private static void dtoToAvaliacao(Avaliacao avaliacao, AvaliacaoDTO dto) {
+        avaliacao.setTipo(dto.getTipo());
+        avaliacao.setMateria(dto.getMateria());
+        avaliacao.setNumQuestoes(dto.getNumQuestoes());
+        avaliacao.setNumAcertos(dto.getNumAcertos());
     }
 }

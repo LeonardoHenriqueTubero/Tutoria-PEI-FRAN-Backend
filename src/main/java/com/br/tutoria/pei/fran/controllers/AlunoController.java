@@ -2,6 +2,7 @@ package com.br.tutoria.pei.fran.controllers;
 
 import com.br.tutoria.pei.fran.dtos.AlunoDTO;
 import com.br.tutoria.pei.fran.dtos.AlunoMinDTO;
+import com.br.tutoria.pei.fran.dtos.AvaliacaoDTO;
 import com.br.tutoria.pei.fran.dtos.ParticipacaoDTO;
 import com.br.tutoria.pei.fran.service.AlunoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class AlunoController {
     @PostMapping
     public ResponseEntity<AlunoDTO> insert(@RequestBody AlunoDTO dto) {
         dto = service.insert(dto);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getRa()).toUri();
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{ra}").buildAndExpand(dto.getRa()).toUri();
         return ResponseEntity.created(uri).body(dto);
     }
 
@@ -43,8 +44,8 @@ public class AlunoController {
     }
 
     @PutMapping(value = "/{ra}")
-    public ResponseEntity<AlunoDTO> update(@PathVariable Long id, @RequestBody AlunoDTO dto) {
-        dto = service.update(id, dto);
+    public ResponseEntity<AlunoDTO> update(@PathVariable Long ra, @RequestBody AlunoDTO dto) {
+        dto = service.update(ra, dto);
         return ResponseEntity.ok(dto);
     }
 
@@ -54,10 +55,28 @@ public class AlunoController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping(value = "/{ra}")
+    @PutMapping(value = "/{ra}/participacao")
     public ResponseEntity<ParticipacaoDTO> addParticipacao(@PathVariable Long ra, @RequestBody ParticipacaoDTO participacaoDTO) {
         participacaoDTO = service.addParticipacao(ra, participacaoDTO);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(participacaoDTO.getId()).toUri();
-        return ResponseEntity.created(uri).body(participacaoDTO);
+        return ResponseEntity.ok(participacaoDTO);
+    }
+
+    @GetMapping(value = "/{ra}/participacao")
+    public ResponseEntity<ParticipacaoDTO> getParticipacao(@PathVariable Long ra) {
+        ParticipacaoDTO dto = service.getParticipacao(ra);
+        return ResponseEntity.ok(dto);
+    }
+
+    @PostMapping(value = "/{ra}/avaliacoes")
+    public ResponseEntity<AvaliacaoDTO> addAvaliacao(@PathVariable Long ra, @RequestBody AvaliacaoDTO dto) {
+        dto = service.addAvaliacao(ra, dto);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{ra}").buildAndExpand(dto.getId()).toUri();
+        return ResponseEntity.created(uri).body(dto);
+    }
+
+    @GetMapping(value = "{ra}/avaliacoes")
+    public ResponseEntity<List<AvaliacaoDTO>> getAllAvaliacoes(@PathVariable Long ra) {
+        List<AvaliacaoDTO> dtos = service.getAllAvaliacoes(ra);
+        return ResponseEntity.ok(dtos);
     }
 }

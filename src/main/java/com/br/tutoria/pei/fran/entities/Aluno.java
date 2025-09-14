@@ -36,7 +36,7 @@ public class Aluno {
     @JoinColumn(name = "escolaridade_id")
     private Escolaridade escolaridade;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Participacao participacao;
 
     @OneToMany(mappedBy = "id.aluno")
@@ -153,6 +153,14 @@ public class Aluno {
 
     public void setEscolaridade(Escolaridade escolaridade) {
         this.escolaridade = escolaridade;
+    }
+
+    public Participacao getParticipacao() {
+        return participacao;
+    }
+
+    public void setParticipacao(Participacao participacao) {
+        this.participacao = participacao;
     }
 
     public List<Avaliacao> getAvaliacoes() {

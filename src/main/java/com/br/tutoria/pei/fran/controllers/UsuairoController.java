@@ -1,6 +1,5 @@
 package com.br.tutoria.pei.fran.controllers;
 
-
 import com.br.tutoria.pei.fran.dtos.UsuarioDTO;
 
 import com.br.tutoria.pei.fran.service.UsuarioService;
@@ -35,5 +34,5 @@ public class UsuairoController {
         UsuarioDTO dto = service.insert(usuarioDTO);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getCpf()).toUri();
         return ResponseEntity.created(uri).body(dto);
-}
+    }
 }

@@ -16,4 +16,8 @@ public interface DadosFamiliaRepository extends JpaRepository<DadosFamilia, Long
             "OR(f.responsavel = :responsavel AND(f.responsavel <> '')) " +
             "LIMIT 1")
     Optional<DadosFamilia> findPaiOrMaeOrResponsavel(String pai, String mae, String responsavel);
+
+    @Query(value = "SELECT f FROM DadosFamilia f " +
+            "JOIN FETCH f.alunos WHERE f.id = :id")
+    DadosFamilia findFamiliaByIdWithAluno(Long id);
 }

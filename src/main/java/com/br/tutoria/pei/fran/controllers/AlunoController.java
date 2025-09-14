@@ -2,6 +2,7 @@ package com.br.tutoria.pei.fran.controllers;
 
 import com.br.tutoria.pei.fran.dtos.AlunoDTO;
 import com.br.tutoria.pei.fran.dtos.AlunoMinDTO;
+import com.br.tutoria.pei.fran.dtos.ParticipacaoDTO;
 import com.br.tutoria.pei.fran.service.AlunoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +43,7 @@ public class AlunoController {
     }
 
     @PutMapping(value = "/{ra}")
-    public ResponseEntity<AlunoDTO> insert(@PathVariable Long id, @RequestBody AlunoDTO dto) {
+    public ResponseEntity<AlunoDTO> update(@PathVariable Long id, @RequestBody AlunoDTO dto) {
         dto = service.update(id, dto);
         return ResponseEntity.ok(dto);
     }
@@ -51,5 +52,12 @@ public class AlunoController {
     public ResponseEntity<Void> delete(@PathVariable Long ra) {
         service.delete(ra);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping(value = "/{ra}")
+    public ResponseEntity<ParticipacaoDTO> addParticipacao(@PathVariable Long ra, @RequestBody ParticipacaoDTO participacaoDTO) {
+        participacaoDTO = service.addParticipacao(ra, participacaoDTO);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(participacaoDTO.getId()).toUri();
+        return ResponseEntity.created(uri).body(participacaoDTO);
     }
 }

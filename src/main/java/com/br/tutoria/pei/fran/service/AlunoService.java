@@ -2,9 +2,11 @@ package com.br.tutoria.pei.fran.service;
 
 import com.br.tutoria.pei.fran.dtos.AlunoDTO;
 import com.br.tutoria.pei.fran.dtos.AlunoMinDTO;
+import com.br.tutoria.pei.fran.dtos.ParticipacaoDTO;
 import com.br.tutoria.pei.fran.entities.Aluno;
 import com.br.tutoria.pei.fran.entities.DadosFamilia;
 import com.br.tutoria.pei.fran.entities.Escolaridade;
+import com.br.tutoria.pei.fran.entities.Participacao;
 import com.br.tutoria.pei.fran.repository.AlunoRepository;
 import com.br.tutoria.pei.fran.repository.DadosFamiliaRepository;
 import com.br.tutoria.pei.fran.repository.EscolaridadeRepository;
@@ -82,17 +84,40 @@ public class AlunoService {
         return new AlunoDTO(aluno);
     }
 
+    //Não estou certo desse tanto de idas no banco de dados
     @Transactional(propagation = Propagation.SUPPORTS)
     public void delete(Long ra) {
         if (!repository.existsById(ra)) {
             throw new ResourceNotFoundException("Recurso não encontrado");
         }
         try {
+            Aluno aluno = repository.findById(ra).get();
+
+            DadosFamilia familia = dadosFamiliarepository.findFamiliaByIdWithAluno(aluno.getDadoFamilia().getId());
+
+            familia.getAlunos().remove(aluno);
+            aluno.setDadoFamilia(null);
+            if (familia.getAlunos().isEmpty()) {
+                dadosFamiliarepository.delete(familia);
+            }
+
             repository.deleteById(ra);
         }
         catch (DataIntegrityViolationException e) {
             throw new DatabaseException("Erro de integridade violada");
         }
+    }
+
+    @Transactional
+    public ParticipacaoDTO addParticipacao(Long ra, ParticipacaoDTO dto) {
+        Aluno aluno = repository.getReferenceById(ra);
+        Participacao participacao = new Participacao();
+        dtoToParticipacao(participacao, dto);
+
+        aluno.setParticipacao(participacao);
+        aluno = repository.save(aluno);
+
+        return new ParticipacaoDTO(aluno.getParticipacao());
     }
 
     private void dtoToEntity(AlunoDTO dto, Aluno entity) {
@@ -134,5 +159,18 @@ public class AlunoService {
         escolaridade.setSerieAnoReprovado(dto.getEscolaridade().getSerieAnoReprovado());
         escolaridade.getDisciplinasFacilidade().addAll(dto.getEscolaridade().getDisciplinasFacilidade());
         escolaridade.getDisciplinasDificuldade().addAll(dto.getEscolaridade().getDisciplinasDificuldade());
+    }
+
+    private static void dtoToParticipacao(Participacao participacao, ParticipacaoDTO dto) {
+        participacao.setAlunoGremista1(dto.getAlunoGremista1());
+        participacao.setAlunoGremista2(dto.getAlunoGremista2());
+        participacao.setEletiva1(dto.getEletiva1());
+        participacao.setEletiva2(dto.getEletiva2());
+        participacao.setClubeJuvenil1(dto.getClubeJuvenil1());
+        participacao.setClubeJuvenil2(dto.getClubeJuvenil2());
+        participacao.setLiderTurma1(dto.getLiderTurma1());
+        participacao.setLiderTurma2(dto.getLiderTurma2());
+        participacao.setJovemAcolhedor1(dto.getJovemAcolhedor1());
+        participacao.setJovemAcolhedor2(dto.getJovemAcolhedor2());
     }
 }

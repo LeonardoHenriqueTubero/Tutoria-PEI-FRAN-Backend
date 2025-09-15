@@ -1,13 +1,8 @@
 package com.br.tutoria.pei.fran.service;
 
-import com.br.tutoria.pei.fran.dtos.AlunoDTO;
-import com.br.tutoria.pei.fran.dtos.AlunoMinDTO;
-import com.br.tutoria.pei.fran.dtos.AvaliacaoDTO;
-import com.br.tutoria.pei.fran.dtos.ParticipacaoDTO;
+import com.br.tutoria.pei.fran.dtos.*;
 import com.br.tutoria.pei.fran.entities.*;
-import com.br.tutoria.pei.fran.repository.AlunoRepository;
-import com.br.tutoria.pei.fran.repository.DadosFamiliaRepository;
-import com.br.tutoria.pei.fran.repository.EscolaridadeRepository;
+import com.br.tutoria.pei.fran.repository.*;
 import com.br.tutoria.pei.fran.service.exceptions.DatabaseException;
 import com.br.tutoria.pei.fran.service.exceptions.EntityAlreadyExistingException;
 import com.br.tutoria.pei.fran.service.exceptions.ResourceNotFoundException;
@@ -25,12 +20,22 @@ public class AlunoService {
     private final AlunoRepository repository;
     private final DadosFamiliaRepository dadosFamiliarepository;
     private final EscolaridadeRepository escolaridadeRepository;
+    private final ParticipacaoRepository participacaoRepository;
+    private final OcorrenciaRepository ocorrenciaRepository;
 
     @Autowired
-    public AlunoService(AlunoRepository repository, DadosFamiliaRepository dadosFamiliarepository, EscolaridadeRepository escolaridadeRepository) {
+    public AlunoService(
+            AlunoRepository repository,
+            DadosFamiliaRepository dadosFamiliarepository,
+            EscolaridadeRepository escolaridadeRepository,
+            ParticipacaoRepository participacaoRepository,
+            OcorrenciaRepository ocorrenciaRepository
+    ) {
         this.repository = repository;
         this.dadosFamiliarepository = dadosFamiliarepository;
         this.escolaridadeRepository = escolaridadeRepository;
+        this.participacaoRepository = participacaoRepository;
+        this.ocorrenciaRepository = ocorrenciaRepository;
     }
 
     @Transactional
@@ -52,6 +57,7 @@ public class AlunoService {
         aluno.setDadoFamilia(familia);
         aluno.setEscolaridade(escolaridade);
         aluno.setParticipacao(new Participacao());
+        aluno.setOcorrencias(new Ocorrencia());
 
         aluno = repository.save(aluno);
         return new AlunoDTO(aluno);
@@ -110,10 +116,11 @@ public class AlunoService {
     @Transactional
     public ParticipacaoDTO addParticipacao(Long ra, ParticipacaoDTO dto) {
         Aluno aluno = repository.getReferenceById(ra);
-        Participacao participacao = new Participacao();
+        Participacao participacao = participacaoRepository.getReferenceById(dto.getId());
         dtoToParticipacao(participacao, dto);
-
+        participacao.setAluno(aluno);
         aluno.setParticipacao(participacao);
+
         aluno = repository.save(aluno);
 
         return new ParticipacaoDTO(aluno.getParticipacao());
@@ -121,9 +128,9 @@ public class AlunoService {
 
     @Transactional(readOnly = true)
     public ParticipacaoDTO getParticipacao(Long ra) {
-        Aluno aluno = repository.findById(ra).orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado"));
+       Participacao participacao = participacaoRepository.getParticipacaoByAlunoRa(ra);
 
-        return new ParticipacaoDTO(aluno.getParticipacao());
+        return new ParticipacaoDTO(participacao);
     }
 
     @Transactional
@@ -133,8 +140,8 @@ public class AlunoService {
 
         dtoToAvaliacao(avaliacao, avaliacaoDTO);
 
-        aluno.addAvaliacao(avaliacao);
         avaliacao.setAluno(aluno);
+        aluno.addAvaliacao(avaliacao);
 
         aluno = repository.save(aluno);
 
@@ -148,7 +155,44 @@ public class AlunoService {
         return aluno.getAvaliacoes().stream().map(AvaliacaoDTO::new).toList();
     }
 
+    @Transactional
+    public OcorrenciaDTO addOcorrencia(Long ra, OcorrenciaDTO ocorrenciaDTO) {
+        Aluno aluno = repository.getReferenceById(ra);
+        Ocorrencia ocorrencia = ocorrenciaRepository.getReferenceById(ocorrenciaDTO.getId());
+        dtoToOcorrencia(ocorrencia, ocorrenciaDTO);
+        ocorrencia.setAluno(aluno);
+        aluno.setOcorrencias(ocorrencia);
 
+        aluno = repository.save(aluno);
+
+        return new OcorrenciaDTO(aluno.getOcorrencias());
+    }
+
+    @Transactional(readOnly = true)
+    public OcorrenciaDTO getOcorrencia(Long ra) {
+        Ocorrencia ocorrencia = ocorrenciaRepository.getOcorrenciaByAlunoRa(ra);
+
+        return new OcorrenciaDTO(ocorrencia);
+    }
+
+    @Transactional
+    public LeituraDTO addLeitura(Long ra, LeituraDTO dto) {
+        Aluno aluno = repository.getReferenceById(ra);
+        Leitura leitura = new Leitura();
+        dtoToLeitura(leitura, dto);
+
+        leitura.setAluno(aluno);
+        aluno.addLeitura(leitura);
+
+        return new LeituraDTO(leitura);
+    }
+
+    @Transactional(readOnly = true)
+    public List<LeituraDTO> getAllLeituras(Long ra) {
+        Aluno aluno = repository.findById(ra).orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado"));
+
+        return aluno.getLeituras().stream().map(LeituraDTO::new).toList();
+    }
 
     private void dtoToEntity(AlunoDTO dto, Aluno entity) {
         entity.setRa(dto.getRa());
@@ -209,5 +253,17 @@ public class AlunoService {
         avaliacao.setMateria(dto.getMateria());
         avaliacao.setNumQuestoes(dto.getNumQuestoes());
         avaliacao.setNumAcertos(dto.getNumAcertos());
+    }
+
+    private static void dtoToOcorrencia(Ocorrencia ocorrencia, OcorrenciaDTO dto) {
+        ocorrencia.setNumBi1(dto.getNumBi1());
+        ocorrencia.setNumBi2(dto.getNumBi2());
+        ocorrencia.setNumBi3(dto.getNumBi3());
+        ocorrencia.setNumBi4(dto.getNumBi4());
+    }
+
+    private static void dtoToLeitura(Leitura leitura, LeituraDTO dto) {
+        leitura.setBimestre(dto.getBimestre());
+        leitura.setLivro(dto.getLivro());
     }
 }

@@ -1,9 +1,6 @@
 package com.br.tutoria.pei.fran.controllers;
 
-import com.br.tutoria.pei.fran.dtos.AlunoDTO;
-import com.br.tutoria.pei.fran.dtos.AlunoMinDTO;
-import com.br.tutoria.pei.fran.dtos.AvaliacaoDTO;
-import com.br.tutoria.pei.fran.dtos.ParticipacaoDTO;
+import com.br.tutoria.pei.fran.dtos.*;
 import com.br.tutoria.pei.fran.service.AlunoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -70,13 +67,38 @@ public class AlunoController {
     @PostMapping(value = "/{ra}/avaliacoes")
     public ResponseEntity<AvaliacaoDTO> addAvaliacao(@PathVariable Long ra, @RequestBody AvaliacaoDTO dto) {
         dto = service.addAvaliacao(ra, dto);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{ra}").buildAndExpand(dto.getId()).toUri();
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
         return ResponseEntity.created(uri).body(dto);
     }
 
     @GetMapping(value = "{ra}/avaliacoes")
     public ResponseEntity<List<AvaliacaoDTO>> getAllAvaliacoes(@PathVariable Long ra) {
         List<AvaliacaoDTO> dtos = service.getAllAvaliacoes(ra);
+        return ResponseEntity.ok(dtos);
+    }
+
+    @PutMapping(value = "/{ra}/ocorrencias")
+    public ResponseEntity<OcorrenciaDTO> addOcorrencias(@PathVariable Long ra, @RequestBody OcorrenciaDTO dto) {
+        dto = service.addOcorrencia(ra, dto);
+        return ResponseEntity.ok(dto);
+    }
+
+    @GetMapping(value = "/{ra}/ocorrencias")
+    public ResponseEntity<OcorrenciaDTO> getOcorrencias(@PathVariable Long ra) {
+        OcorrenciaDTO dto = service.getOcorrencia(ra);
+        return ResponseEntity.ok(dto);
+    }
+
+    @PostMapping(value = "/{ra}/leituras")
+    public ResponseEntity<LeituraDTO> addLeitura(@PathVariable Long ra, @RequestBody LeituraDTO dto) {
+        dto = service.addLeitura(ra, dto);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
+        return ResponseEntity.created(uri).body(dto);
+    }
+
+    @GetMapping(value = "/{ra}/leituras")
+    public ResponseEntity<List<LeituraDTO>> getAllLeituras(@PathVariable Long ra) {
+        List<LeituraDTO> dtos = service.getAllLeituras(ra);
         return ResponseEntity.ok(dtos);
     }
 }

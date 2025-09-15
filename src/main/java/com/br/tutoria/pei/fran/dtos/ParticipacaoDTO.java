@@ -4,6 +4,7 @@ import com.br.tutoria.pei.fran.entities.Participacao;
 
 public class ParticipacaoDTO {
 
+    private Long id;
     private String clubeJuvenil1;
     private String eletiva1;
     private Boolean liderTurma1;
@@ -18,6 +19,7 @@ public class ParticipacaoDTO {
     public ParticipacaoDTO() {}
 
     public ParticipacaoDTO(Long id, String clubeJuvenil1, String eletiva1, Boolean liderTurma1, Boolean alunoGremista1, Boolean jovemAcolhedor1, String clubeJuvenil2, String eletiva2, Boolean liderTurma2, Boolean alunoGremista2, Boolean jovemAcolhedor2) {
+        this.id = id;
         this.clubeJuvenil1 = clubeJuvenil1;
         this.eletiva1 = eletiva1;
         this.liderTurma1 = liderTurma1;
@@ -31,6 +33,7 @@ public class ParticipacaoDTO {
     }
 
     public ParticipacaoDTO(Participacao participacao) {
+        id = participacao.getId();
         clubeJuvenil1 = participacao.getClubeJuvenil1();
         eletiva1 = participacao.getEletiva1();
         liderTurma1 = participacao.getLiderTurma1();
@@ -41,6 +44,10 @@ public class ParticipacaoDTO {
         liderTurma2 = participacao.getLiderTurma2();
         alunoGremista2 = participacao.getAlunoGremista2();
         jovemAcolhedor2 = participacao.getJovemAcolhedor2();
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getClubeJuvenil1() {

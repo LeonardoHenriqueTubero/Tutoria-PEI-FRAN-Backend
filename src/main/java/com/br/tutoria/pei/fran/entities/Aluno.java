@@ -212,13 +212,15 @@ public class Aluno {
         this.imgUrl = imgUrl;
     }
 
-    @Override
-    public String toString() {
-        return "Aluno{" +
-                "ra=" + ra +
-                ", nome='" + nome + '\'' +
-                '}';
+    public Ocorrencia getOcorrencias() {
+        return ocorrencias;
     }
+
+    public void setOcorrencias(Ocorrencia ocorrencias) {
+        this.ocorrencias = ocorrencias;
+    }
+
+
 
     @Override
     public boolean equals(Object o) {

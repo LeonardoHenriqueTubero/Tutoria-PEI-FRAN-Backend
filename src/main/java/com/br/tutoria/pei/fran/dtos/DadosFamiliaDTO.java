@@ -1,15 +1,24 @@
 package com.br.tutoria.pei.fran.dtos;
 
 import com.br.tutoria.pei.fran.entities.DadosFamilia;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 
 public class DadosFamiliaDTO {
 
+    @NotBlank(message = "Campo requerido")
     private String pai;
+    @NotBlank(message = "Campo requerido")
     private String mae;
+    @NotBlank(message = "Campo requerido")
     private String responsavel;
+    @NotBlank(message = "Campo requerido")
     private String estruturaFamiliar;
+    @Positive(message = "Insira um numero valido")
     private Integer numPai;
+    @Positive(message = "Insira um numero valido")
     private Integer numMae;
+    @Positive(message = "Insira um numero valido")
     private Integer numResponsavel;
 
     public DadosFamiliaDTO() {}

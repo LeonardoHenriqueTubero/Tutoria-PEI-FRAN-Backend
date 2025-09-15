@@ -1,13 +1,19 @@
 package com.br.tutoria.pei.fran.dtos;
 
 import com.br.tutoria.pei.fran.entities.Avaliacao;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class AvaliacaoDTO {
 
     private Long id;
+    @NotBlank(message = "Campo requerido")
     private String tipo;
+    @NotBlank(message = "Campo requerido")
     private String materia;
+    @NotNull(message = "Campo requerido")
     private Integer numQuestoes;
+    @NotNull(message = "Campo requerido")
     private Double numAcertos;
 
     public AvaliacaoDTO() {}

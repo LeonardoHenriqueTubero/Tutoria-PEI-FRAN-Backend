@@ -1,24 +1,36 @@
 package com.br.tutoria.pei.fran.dtos;
 
 import com.br.tutoria.pei.fran.entities.Escolaridade;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class EscolaridadeDTO {
 
+    @NotNull(message = "Campo requerido")
     private Boolean contatoFora;
+    @NotNull(message = "Campo requerido")
     private Boolean difAprendizagem;
+    @NotNull(message = "Campo requerido")
     private Boolean apoioPedagogico;
     private List<String> disciplinasFacilidade = new ArrayList<>();
     private List<String> disciplinasDificuldade = new ArrayList<>();
+    @NotNull(message = "Campo requerido")
     private Boolean atividadeExtra;
+    @NotNull(message = "Campo requerido")
     private Boolean difLocomotiva;
+    @NotNull(message = "Campo requerido")
     private Boolean difVisao;
+    @NotNull(message = "Campo requerido")
     private Boolean difAtencao;
+    @NotNull(message = "Campo requerido")
     private Boolean difFala;
+    @NotNull(message = "Campo requerido")
     private Boolean difEscrita;
+    @NotNull(message = "Campo requerido")
     private Boolean adaptacaoGrupo;
+    @NotNull(message = "Campo requerido")
     private Boolean reprovado;
     private String serieAnoReprovado;
 

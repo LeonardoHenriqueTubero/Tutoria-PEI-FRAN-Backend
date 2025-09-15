@@ -52,6 +52,7 @@ public class AlunoController {
         return ResponseEntity.noContent().build();
     }
 
+    //Mudar isso depois
     @PutMapping(value = "/{ra}/participacao")
     public ResponseEntity<ParticipacaoDTO> addParticipacao(@PathVariable Long ra, @RequestBody ParticipacaoDTO participacaoDTO) {
         participacaoDTO = service.addParticipacao(ra, participacaoDTO);
@@ -77,6 +78,7 @@ public class AlunoController {
         return ResponseEntity.ok(dtos);
     }
 
+    //Mudar isso depois
     @PutMapping(value = "/{ra}/ocorrencias")
     public ResponseEntity<OcorrenciaDTO> addOcorrencias(@PathVariable Long ra, @RequestBody OcorrenciaDTO dto) {
         dto = service.addOcorrencia(ra, dto);

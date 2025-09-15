@@ -1,11 +1,17 @@
 package com.br.tutoria.pei.fran.dtos;
 
 import com.br.tutoria.pei.fran.entities.Usuario;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 public class UsuarioDTO {
-    private Integer cpf;
-    private String nome;
 
+    @Positive(message = "Nao pode ser negativo")
+    @NotNull(message = "Campo requerido")
+    private Integer cpf;
+    @NotBlank(message = "Campo requerido")
+    private String nome;
 
     public UsuarioDTO(Integer cpf, String nome) {
         this.cpf = cpf;

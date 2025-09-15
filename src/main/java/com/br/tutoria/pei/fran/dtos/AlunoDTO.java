@@ -1,24 +1,40 @@
 package com.br.tutoria.pei.fran.dtos;
 
 import com.br.tutoria.pei.fran.entities.Aluno;
+import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
 
 public class AlunoDTO {
 
+    @Size(min = 13, max = 13, message = "O ra deve ter 13 digitos")
+    @NotNull(message = "Campo requerido")
     private Long ra;
+    @NotBlank(message = "Campo requerido")
     private String nome;
+    @NotBlank(message = "Campo requerido")
+    @Email(message = "O campo deve ser um email valido")
     private String email;
+    @NotNull(message = "Campo requerido")
     private LocalDate dataNasc;
+    @NotNull(message = "Campo requerido")
+    @Positive(message = "A idade deve ser positiva")
     private Integer idade;
+    @NotNull(message = "Campo requerido")
     private Integer telefone;
+    @NotBlank(message = "Campo requerido")
     private String transporte;
+    @NotBlank(message = "Campo requerido")
     private String projetoVida;
+    @NotBlank(message = "Campo requerido")
     private String serie;
+    @NotBlank(message = "Campo requerido")
     private String endereco;
     private String imgUrl;
 
+    @NotNull(message = "Dados da familia nao preenchidos")
     private DadosFamiliaDTO dadoFamilia;
+    @NotNull(message = "Dados escolares nao preenchidos")
     private EscolaridadeDTO escolaridade;
 
     public AlunoDTO() {}

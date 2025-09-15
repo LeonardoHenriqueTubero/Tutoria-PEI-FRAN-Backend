@@ -1,11 +1,15 @@
 package com.br.tutoria.pei.fran.dtos;
 
 import com.br.tutoria.pei.fran.entities.Leitura;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class LeituraDTO {
 
     private Long id;
+    @NotNull(message = "Campo requerido")
     private Integer bimestre;
+    @NotBlank(message = "Campo requerido")
     private String livro;
 
     public LeituraDTO() {}

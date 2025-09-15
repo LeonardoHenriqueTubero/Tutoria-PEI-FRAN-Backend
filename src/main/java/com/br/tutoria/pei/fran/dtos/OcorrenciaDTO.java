@@ -1,13 +1,18 @@
 package com.br.tutoria.pei.fran.dtos;
 
 import com.br.tutoria.pei.fran.entities.Ocorrencia;
+import jakarta.validation.constraints.Positive;
 
 public class OcorrenciaDTO {
 
     private Long id;
+    @Positive(message = "Nao pode ser negativo")
     private Integer numBi1;
+    @Positive(message = "Nao pode ser negativo")
     private Integer numBi2;
+    @Positive(message = "Nao pode ser negativo")
     private Integer numBi3;
+    @Positive(message = "Nao pode ser negativo")
     private Integer numBi4;
 
     public OcorrenciaDTO() {}

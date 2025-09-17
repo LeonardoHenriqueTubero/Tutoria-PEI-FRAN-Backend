@@ -10,7 +10,6 @@ public class DadosFamiliaDTO {
     private String pai;
     @NotBlank(message = "Campo requerido")
     private String mae;
-    @NotBlank(message = "Campo requerido")
     private String responsavel;
     @NotBlank(message = "Campo requerido")
     private String estruturaFamiliar;

@@ -2,6 +2,7 @@ package com.br.tutoria.pei.fran.controllers;
 
 import com.br.tutoria.pei.fran.dtos.*;
 import com.br.tutoria.pei.fran.service.AlunoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class AlunoController {
     }
 
     @PostMapping
-    public ResponseEntity<AlunoDTO> insert(@RequestBody AlunoDTO dto) {
+    public ResponseEntity<AlunoDTO> insert(@Valid @RequestBody AlunoDTO dto) {
         dto = service.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{ra}").buildAndExpand(dto.getRa()).toUri();
         return ResponseEntity.created(uri).body(dto);
@@ -41,7 +42,7 @@ public class AlunoController {
     }
 
     @PutMapping(value = "/{ra}")
-    public ResponseEntity<AlunoDTO> update(@PathVariable Long ra, @RequestBody AlunoDTO dto) {
+    public ResponseEntity<AlunoDTO> update(@PathVariable Long ra, @Valid @RequestBody AlunoDTO dto) {
         dto = service.update(ra, dto);
         return ResponseEntity.ok(dto);
     }
@@ -66,7 +67,7 @@ public class AlunoController {
     }
 
     @PostMapping(value = "/{ra}/avaliacoes")
-    public ResponseEntity<AvaliacaoDTO> addAvaliacao(@PathVariable Long ra, @RequestBody AvaliacaoDTO dto) {
+    public ResponseEntity<AvaliacaoDTO> addAvaliacao(@PathVariable Long ra, @Valid @RequestBody AvaliacaoDTO dto) {
         dto = service.addAvaliacao(ra, dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
         return ResponseEntity.created(uri).body(dto);
@@ -80,7 +81,7 @@ public class AlunoController {
 
     //Mudar isso depois
     @PutMapping(value = "/{ra}/ocorrencias")
-    public ResponseEntity<OcorrenciaDTO> addOcorrencias(@PathVariable Long ra, @RequestBody OcorrenciaDTO dto) {
+    public ResponseEntity<OcorrenciaDTO> addOcorrencias(@PathVariable Long ra, @Valid @RequestBody OcorrenciaDTO dto) {
         dto = service.addOcorrencia(ra, dto);
         return ResponseEntity.ok(dto);
     }
@@ -92,7 +93,7 @@ public class AlunoController {
     }
 
     @PostMapping(value = "/{ra}/leituras")
-    public ResponseEntity<LeituraDTO> addLeitura(@PathVariable Long ra, @RequestBody LeituraDTO dto) {
+    public ResponseEntity<LeituraDTO> addLeitura(@PathVariable Long ra, @Valid @RequestBody LeituraDTO dto) {
         dto = service.addLeitura(ra, dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
         return ResponseEntity.created(uri).body(dto);

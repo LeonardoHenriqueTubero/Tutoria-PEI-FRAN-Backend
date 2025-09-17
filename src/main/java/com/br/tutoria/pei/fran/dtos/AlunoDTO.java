@@ -1,13 +1,14 @@
 package com.br.tutoria.pei.fran.dtos;
 
 import com.br.tutoria.pei.fran.entities.Aluno;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
 
 public class AlunoDTO {
 
-    @Size(min = 13, max = 13, message = "O ra deve ter 13 digitos")
+    @Digits(integer = 13, fraction = 0, message = "O RA deve ter exatamente 13 dígitos")
     @NotNull(message = "Campo requerido")
     private Long ra;
     @NotBlank(message = "Campo requerido")
@@ -32,9 +33,9 @@ public class AlunoDTO {
     private String endereco;
     private String imgUrl;
 
-    @NotNull(message = "Dados da familia nao preenchidos")
+    @Valid
     private DadosFamiliaDTO dadoFamilia;
-    @NotNull(message = "Dados escolares nao preenchidos")
+    @Valid
     private EscolaridadeDTO escolaridade;
 
     public AlunoDTO() {}

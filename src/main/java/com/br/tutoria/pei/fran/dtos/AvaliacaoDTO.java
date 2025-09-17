@@ -3,6 +3,7 @@ package com.br.tutoria.pei.fran.dtos;
 import com.br.tutoria.pei.fran.entities.Avaliacao;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 public class AvaliacaoDTO {
 
@@ -12,8 +13,10 @@ public class AvaliacaoDTO {
     @NotBlank(message = "Campo requerido")
     private String materia;
     @NotNull(message = "Campo requerido")
+    @Positive(message = "Valor nao pode ser negativo")
     private Integer numQuestoes;
     @NotNull(message = "Campo requerido")
+    @Positive(message = "Valor nao pode ser negativo")
     private Double numAcertos;
 
     public AvaliacaoDTO() {}

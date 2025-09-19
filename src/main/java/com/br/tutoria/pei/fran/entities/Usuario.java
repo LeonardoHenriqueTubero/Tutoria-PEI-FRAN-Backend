@@ -13,7 +13,7 @@ import java.util.Set;
 public class Usuario  {
 
     @Id
-    private Integer cpf;
+    private String cpf;
     private String nome;
 
 
@@ -23,7 +23,7 @@ public class Usuario  {
     @OneToMany(mappedBy = "id.usuario")
     Set<RegistroAtendimento> registroAtendimentos = new HashSet<>();
 
-    public Usuario(Integer cpf, String nome) {
+    public Usuario(String cpf, String nome) {
         this.cpf = cpf;
         this.nome = nome;
     }
@@ -32,11 +32,11 @@ public class Usuario  {
 
     }
 
-    public Integer getCpf() {
+    public String getCpf() {
         return cpf;
     }
 
-    public void setCpf(Integer cpf) {
+    public void setCpf(String cpf) {
         this.cpf = cpf;
     }
 

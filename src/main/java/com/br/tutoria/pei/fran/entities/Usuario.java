@@ -13,9 +13,16 @@ import java.util.Set;
 public class Usuario  {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String cpf;
     private String nome;
 
+    @ManyToMany
+    @JoinTable(name = "tb_usuario_papel",
+    joinColumns = @JoinColumn(name = "usuario_id"),
+    inverseJoinColumns = @JoinColumn(name = "papel_id"))
+    private Set<Papel> papeis = new HashSet<>();
 
     @OneToMany(mappedBy = "id.usuario")
     Set<Tutoria> tutorias = new HashSet<>();
@@ -23,13 +30,22 @@ public class Usuario  {
     @OneToMany(mappedBy = "id.usuario")
     Set<RegistroAtendimento> registroAtendimentos = new HashSet<>();
 
-    public Usuario(String cpf, String nome) {
+    public Usuario(Long id, String cpf, String nome) {
+        this.id = id;
         this.cpf = cpf;
         this.nome = nome;
     }
 
     public Usuario() {
 
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getCpf() {
@@ -48,6 +64,18 @@ public class Usuario  {
         this.nome = nome;
     }
 
+    public void addPapel(Papel papel) {
+        papeis.add(papel);
+    }
+
+    public boolean hasPapel(String nomePapel) {
+        for(Papel papel : papeis) {
+            if(papel.getAuthority().equals(nomePapel)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public Set<Tutoria> getTutorias() {
         return tutorias;

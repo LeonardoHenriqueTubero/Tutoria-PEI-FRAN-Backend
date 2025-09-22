@@ -4,13 +4,15 @@ package com.br.tutoria.pei.fran.entities;
 import jakarta.persistence.*;
 
 
+
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "tb_usuario")
-public class Usuario  {
+public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -92,4 +94,6 @@ public class Usuario  {
     public List<Aluno> getAlunosRegistroAtendimentos() {
         return registroAtendimentos.stream().map(RegistroAtendimento::getAluno).toList();
     }
+
+
 }

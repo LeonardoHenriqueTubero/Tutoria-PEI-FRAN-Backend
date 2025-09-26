@@ -27,7 +27,7 @@ public class UsuarioService {
     }
 
     public UsuarioDTO insert(UsuarioDTO dto) {
-        if (repository.existsById(dto.getId())) {
+        if (repository.existsByCpf((dto.getCpf()))){
             throw new EntityAlreadyExistingException("Entidade já criada!");
         }
         Usuario novo = new Usuario();

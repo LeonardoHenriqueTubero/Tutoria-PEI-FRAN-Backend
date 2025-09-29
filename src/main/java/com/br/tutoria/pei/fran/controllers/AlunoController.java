@@ -4,16 +4,16 @@ import com.br.tutoria.pei.fran.dtos.*;
 import com.br.tutoria.pei.fran.service.AlunoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 class CorsConfig {
@@ -33,7 +33,6 @@ class CorsConfig {
         };
     }
 }
-
 
 @CrossOrigin (origins = "*")
 @RestController
@@ -56,7 +55,7 @@ public class AlunoController {
 
     @PostMapping(value = "/alunos/addAluno")
     public ResponseEntity<AlunoDTO> insertAluno(@Valid @RequestBody AlunoDTO dto) {
-        dto = service.insert(dto);
+        dto = service.insertAluno(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{ra}").buildAndExpand(dto.getRa()).toUri();
         return ResponseEntity.created(uri).body(dto);
     }

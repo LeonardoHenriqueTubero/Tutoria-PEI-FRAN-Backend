@@ -10,6 +10,30 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+@Configuration
+class CorsConfig {
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOrigins("http://127.0.0.1:3002") // ou "*"
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedHeaders("*")
+                        .exposedHeaders("*")
+                        .allowCredentials(true);
+            }
+        };
+    }
+}
+
 
 @CrossOrigin (origins = "*")
 @RestController
@@ -30,6 +54,12 @@ public class AlunoController {
         return ResponseEntity.created(uri).body(dto);
     }
 
+    @PostMapping(value = "/alunos/addAluno")
+    public ResponseEntity<AlunoDTO> insertAluno(@Valid @RequestBody AlunoDTO dto) {
+        dto = service.insert(dto);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{ra}").buildAndExpand(dto.getRa()).toUri();
+        return ResponseEntity.created(uri).body(dto);
+    }
     @GetMapping
     public ResponseEntity<List<AlunoMinDTO>> getAllNamesAndImages() {
         List<AlunoMinDTO> result = service.getAllNames();

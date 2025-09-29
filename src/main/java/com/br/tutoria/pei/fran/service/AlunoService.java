@@ -62,6 +62,17 @@ public class AlunoService {
         aluno = repository.save(aluno);
         return new AlunoDTO(aluno);
     }
+    @Transactional
+    public AlunoDTO insertAluno(AlunoDTO dto) {
+        if (repository.existsById(dto.getRa())) {
+            throw new EntityAlreadyExistingException("Entidade já criada!");
+        }
+        Aluno aluno = new Aluno();
+        dtoToEntity(dto, aluno);
+        aluno = repository.save(aluno);
+        return new AlunoDTO(aluno);
+    }
+
 
     @Transactional
     public AlunoDTO update(Long ra, AlunoDTO dto) {

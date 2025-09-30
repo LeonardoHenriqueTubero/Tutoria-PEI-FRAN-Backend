@@ -50,6 +50,10 @@ public class Aluno {
     @JoinColumn(name = "ocorrencias_id")
     private Ocorrencia ocorrencias;
 
+    @ManyToOne
+    @JoinColumn(name = "tutor_id")
+    private Usuario tutor;
+
     public Aluno() {}
 
     public Aluno(Long ra, String nome, String email, LocalDate dataNasc, Integer idade, Integer telefone, String transporte, String projetoVida, String serie, String endereco, DadosFamilia dadoFamilia, Escolaridade escolaridade, String imgUrl) {
@@ -220,7 +224,13 @@ public class Aluno {
         this.ocorrencias = ocorrencias;
     }
 
+    public Usuario getTutor() {
+        return tutor;
+    }
 
+    public void setTutor(Usuario tutor) {
+        this.tutor = tutor;
+    }
 
     @Override
     public boolean equals(Object o) {

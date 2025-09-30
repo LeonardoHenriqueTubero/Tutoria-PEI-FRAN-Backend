@@ -33,7 +33,6 @@ import java.util.List;
     }
 }
 
-
 @CrossOrigin (origins = "*")
 @RestController
 @RequestMapping(value = "/alunos")
@@ -61,12 +60,17 @@ public class AlunoController {
                 .toUri();
         return ResponseEntity.created(uri).body(aluno);
     }
+
     @GetMapping("/simple")
     public List<AlunoMinDTO> listarAlunosSimple() {
         return service.getAllNames(); // ✅ assim funciona
     }
 
-
+    /*
+    @GetMapping("/simple")
+    public List<AlunoMinDTO> listarAlunosProfessores(String cpf) {
+        return service.searchAlunosByProfessores(cpf);
+    }*/
 
     @GetMapping
     public ResponseEntity<List<AlunoMinDTO>> getAllNamesAndImages() {

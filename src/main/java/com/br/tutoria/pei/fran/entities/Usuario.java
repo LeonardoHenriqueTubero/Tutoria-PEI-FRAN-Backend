@@ -3,9 +3,7 @@ package com.br.tutoria.pei.fran.entities;
 
 import jakarta.persistence.*;
 
-
-
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -31,6 +29,9 @@ public class Usuario {
 
     @OneToMany(mappedBy = "id.usuario")
     Set<RegistroAtendimento> registroAtendimentos = new HashSet<>();
+
+    @OneToMany
+    List<Aluno> tutorandos = new ArrayList<>();
 
     public Usuario(Long id, String cpf, String nome) {
         this.id = id;

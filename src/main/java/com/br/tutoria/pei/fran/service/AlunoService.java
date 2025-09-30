@@ -62,17 +62,14 @@ public class AlunoService {
         aluno = repository.save(aluno);
         return new AlunoDTO(aluno);
     }
-    @Transactional
-    public AlunoDTO insertAluno(AlunoDTO dto) {
-        if (repository.existsById(dto.getRa())) {
-            throw new EntityAlreadyExistingException("Entidade já criada!");
-        }
+    public AlunoDTO insertMin(AlunoMinDTO dto) {
         Aluno aluno = new Aluno();
-        dtoToEntity(dto, aluno);
+        aluno.setRa(dto.getRa());
+        aluno.setNome(dto.getNome());
+        // os outros campos ficam nulos
         aluno = repository.save(aluno);
         return new AlunoDTO(aluno);
     }
-
 
     @Transactional
     public AlunoDTO update(Long ra, AlunoDTO dto) {
@@ -88,11 +85,11 @@ public class AlunoService {
         aluno.getDadoFamilia().getAlunos().forEach(System.out::println);
         return new AlunoDTO(aluno);
     }
-
     @Transactional(readOnly = true)
     public List<AlunoMinDTO> getAllNames() {
-        return repository.getAllNamesAndImage();
+        return repository.getAllNames();
     }
+
 
     @Transactional(readOnly = true)
     public AlunoDTO getAlunosByRa(Long ra) {

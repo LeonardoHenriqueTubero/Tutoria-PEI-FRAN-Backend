@@ -16,23 +16,23 @@ import java.net.URI;
 import java.util.List;
 
 @Configuration
-class CorsConfig {
-
+ class CorsConfig {
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://127.0.0.1:3002") // ou "*"
+                        .allowedOrigins("http://127.0.0.1:3002")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .exposedHeaders("*")
-                        .allowCredentials(true);
+                        .allowCredentials(false); // coloque false se não precisa de cookies/autenticação
             }
         };
     }
 }
+
 
 @CrossOrigin (origins = "*")
 @RestController
@@ -52,13 +52,22 @@ public class AlunoController {
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{ra}").buildAndExpand(dto.getRa()).toUri();
         return ResponseEntity.created(uri).body(dto);
     }
-
-    @PostMapping(value = "/alunos/addAluno")
-    public ResponseEntity<AlunoDTO> insertAluno(@Valid @RequestBody AlunoDTO dto) {
-        dto = service.insertAluno(dto);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{ra}").buildAndExpand(dto.getRa()).toUri();
-        return ResponseEntity.created(uri).body(dto);
+    @PostMapping("/simple")
+    public ResponseEntity<AlunoDTO> insertMin(@RequestBody AlunoMinDTO dto) {
+        AlunoDTO aluno = service.insertMin(dto); // converte e salva
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{ra}")
+                .buildAndExpand(aluno.getRa())
+                .toUri();
+        return ResponseEntity.created(uri).body(aluno);
     }
+    @GetMapping("/simple")
+    public List<AlunoMinDTO> listarAlunosSimple() {
+        return service.getAllNames(); // ✅ assim funciona
+    }
+
+
+
     @GetMapping
     public ResponseEntity<List<AlunoMinDTO>> getAllNamesAndImages() {
         List<AlunoMinDTO> result = service.getAllNames();

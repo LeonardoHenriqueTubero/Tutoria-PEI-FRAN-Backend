@@ -1,22 +1,29 @@
 package com.br.tutoria.pei.fran.dtos;
 
 public class AlunoMinDTO {
-
-    private String name;
-    private String imgUrl;
+    private Long ra;
+    private String nome;
 
     public AlunoMinDTO() {}
 
-    public AlunoMinDTO(String name, String imgUrl) {
-        this.name = name;
-        this.imgUrl = imgUrl;
+    public AlunoMinDTO(Long ra, String nome) {
+        this.ra = ra;
+        this.nome = nome;
     }
 
-    public String getName() {
-        return name;
+    public Long getRa() {
+        return ra;
     }
 
-    public String getImgUrl() {
-        return imgUrl;
+    public void setRa(Long ra) {
+        this.ra = ra;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 }

@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface AlunoRepository extends JpaRepository<Aluno, Long> {
 
-    @Query("SELECT new com.br.tutoria.pei.fran.dtos.AlunoMinDTO(obj.nome, obj.imgUrl) " +
-            "FROM Aluno obj")
-    List<AlunoMinDTO> getAllNamesAndImage();
+    @Query("SELECT new com.br.tutoria.pei.fran.dtos.AlunoMinDTO(obj.ra, obj.nome) FROM Aluno obj")
+    List<AlunoMinDTO> getAllNames();
 }
+

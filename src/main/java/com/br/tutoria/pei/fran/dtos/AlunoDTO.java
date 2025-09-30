@@ -66,11 +66,12 @@ public class AlunoDTO {
         transporte = aluno.getTransporte();
         projetoVida = aluno.getProjetoVida();
         serie = aluno.getSerie();
-        dadoFamilia = new DadosFamiliaDTO(aluno.getDadoFamilia());
-        escolaridade = new EscolaridadeDTO(aluno.getEscolaridade());
+        dadoFamilia = aluno.getDadoFamilia() != null ? new DadosFamiliaDTO(aluno.getDadoFamilia()) : null;
+        escolaridade = aluno.getEscolaridade() != null ? new EscolaridadeDTO(aluno.getEscolaridade()) : null;
         endereco = aluno.getEndereco();
         imgUrl = aluno.getImgUrl();
     }
+
 
     public Long getRa() {
         return ra;

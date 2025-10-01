@@ -68,11 +68,13 @@ public class ResourceServerConfig {
 
 		CorsConfiguration corsConfig = new CorsConfiguration();
 		corsConfig.setAllowedOriginPatterns(Arrays.asList(origins));
-		corsConfig.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "DELETE", "PATCH"));
+        //corsConfig.setAllowedOrigins(Arrays.asList(origins));
+        corsConfig.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "DELETE", "PATCH", "OPTIONS"));
 		corsConfig.setAllowCredentials(true);
-		corsConfig.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+		//corsConfig.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        corsConfig.addAllowedHeader("*");
 
-		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", corsConfig);
 		return source;
 	}

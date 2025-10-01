@@ -1,12 +1,13 @@
 package com.br.tutoria.pei.fran.entities;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Objects;
 
 @Entity
 @Table(name = "tb_papel")
-public class Papel {
+public class Papel implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +29,7 @@ public class Papel {
         this.id = id;
     }
 
+    @Override
     public String getAuthority() {
         return authority;
     }

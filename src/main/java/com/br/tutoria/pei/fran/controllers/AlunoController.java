@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -78,6 +79,7 @@ public class AlunoController {
         return ResponseEntity.ok(result);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_PROFESSOR','ROLE_CORDENADOR')")
     @GetMapping(value = "/{ra}")
     public ResponseEntity<AlunoDTO> getAlunoByRa(@PathVariable Long ra) {
         AlunoDTO result = service.getAlunosByRa(ra);

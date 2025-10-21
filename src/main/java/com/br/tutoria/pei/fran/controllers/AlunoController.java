@@ -5,7 +5,6 @@ import com.br.tutoria.pei.fran.service.AlunoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -13,6 +12,7 @@ import java.net.URI;
 import java.util.List;
 
 
+@CrossOrigin (origins = "*")
 @RestController
 @RequestMapping(value = "/alunos")
 public class AlunoController {
@@ -39,17 +39,12 @@ public class AlunoController {
                 .toUri();
         return ResponseEntity.created(uri).body(aluno);
     }
-
     @GetMapping("/simple")
     public List<AlunoMinDTO> listarAlunosSimple() {
         return service.getAllNames(); // ✅ assim funciona
     }
 
-    /*
-    @GetMapping("/simple")
-    public List<AlunoMinDTO> listarAlunosProfessores(String cpf) {
-        return service.searchAlunosByProfessores(cpf);
-    }*/
+
 
     @GetMapping
     public ResponseEntity<List<AlunoMinDTO>> getAllNamesAndImages() {
@@ -57,7 +52,6 @@ public class AlunoController {
         return ResponseEntity.ok(result);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_PROFESSOR','ROLE_CORDENADOR')")
     @GetMapping(value = "/{ra}")
     public ResponseEntity<AlunoDTO> getAlunoByRa(@PathVariable Long ra) {
         AlunoDTO result = service.getAlunosByRa(ra);

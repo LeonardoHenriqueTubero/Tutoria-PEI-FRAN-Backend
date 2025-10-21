@@ -67,8 +67,6 @@ public class AlunoService {
         aluno.setRa(dto.getRa());
         aluno.setNome(dto.getNome());
         // os outros campos ficam nulos
-        //alguma função pra pegar o usuario logado
-        //aluno.setTutor(tutor);
         aluno = repository.save(aluno);
         return new AlunoDTO(aluno);
     }
@@ -92,10 +90,6 @@ public class AlunoService {
         return repository.getAllNames();
     }
 
-    @Transactional(readOnly = true)
-    public List<AlunoMinDTO> searchAlunosByProfessores(String cpf) {
-        return repository.getAlunosByProfesorres(cpf);
-    }
 
     @Transactional(readOnly = true)
     public AlunoDTO getAlunosByRa(Long ra) {

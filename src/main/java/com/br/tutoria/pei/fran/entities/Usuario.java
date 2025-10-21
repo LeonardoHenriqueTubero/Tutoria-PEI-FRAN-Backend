@@ -2,14 +2,14 @@ package com.br.tutoria.pei.fran.entities;
 
 
 import jakarta.persistence.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "tb_usuario")
-public class Usuario implements UserDetails {
+public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,9 +28,6 @@ public class Usuario implements UserDetails {
 
     @OneToMany(mappedBy = "id.usuario")
     Set<RegistroAtendimento> registroAtendimentos = new HashSet<>();
-
-    @OneToMany
-    List<Aluno> tutorandos = new ArrayList<>();
 
     public Usuario(Long id, String cpf, String nome) {
         this.id = id;
@@ -70,6 +67,15 @@ public class Usuario implements UserDetails {
         papeis.add(papel);
     }
 
+    public boolean hasPapel(String nomePapel) {
+        for(Papel papel : papeis) {
+            if(papel.getAuthority().equals(nomePapel)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public Set<Tutoria> getTutorias() {
         return tutorias;
     }
@@ -86,39 +92,5 @@ public class Usuario implements UserDetails {
         return registroAtendimentos.stream().map(RegistroAtendimento::getAluno).toList();
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return papeis;
-    }
 
-    @Override
-    public String getPassword() {
-        return this.cpf;
-    }
-
-    @Override
-    public String getUsername() {
-        return nome;
-    }
-
-    public boolean hasPapel(String nomePapel) {
-        for(Papel papel : papeis) {
-            if(papel.getAuthority().equals(nomePapel)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Usuario usuario = (Usuario) o;
-        return Objects.equals(id, usuario.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
 }

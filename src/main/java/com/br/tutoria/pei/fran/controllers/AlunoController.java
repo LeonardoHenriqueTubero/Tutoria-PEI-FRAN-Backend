@@ -11,8 +11,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
-
-@CrossOrigin (origins = "*")
 @RestController
 @RequestMapping(value = "/alunos")
 public class AlunoController {
@@ -43,8 +41,6 @@ public class AlunoController {
     public List<AlunoMinDTO> listarAlunosSimple() {
         return service.getAllNames(); // ✅ assim funciona
     }
-
-
 
     @GetMapping
     public ResponseEntity<List<AlunoMinDTO>> getAllNamesAndImages() {

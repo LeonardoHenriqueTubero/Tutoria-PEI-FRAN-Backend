@@ -17,13 +17,7 @@ public class Usuario {
     private String cpf;
     private String nome;
 
-    @ManyToMany
-    @JoinTable(name = "tb_usuario_papel",
-    joinColumns = @JoinColumn(name = "usuario_id"),
-    inverseJoinColumns = @JoinColumn(name = "papel_id"))
-    private Set<Papel> papeis = new HashSet<>();
-
-    @OneToMany(mappedBy = "id.usuario")
+       @OneToMany(mappedBy = "id.usuario")
     Set<Tutoria> tutorias = new HashSet<>();
 
     @OneToMany(mappedBy = "id.usuario")
@@ -61,19 +55,6 @@ public class Usuario {
 
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-    public void addPapel(Papel papel) {
-        papeis.add(papel);
-    }
-
-    public boolean hasPapel(String nomePapel) {
-        for(Papel papel : papeis) {
-            if(papel.getAuthority().equals(nomePapel)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public Set<Tutoria> getTutorias() {

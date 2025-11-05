@@ -27,6 +27,7 @@ public class UsuarioController {
         List<UsuarioDTO> dtos = service.findAll();
         return ResponseEntity.ok(dtos);
     }
+
     @PostMapping
     public ResponseEntity<UsuarioDTO> adicionarUsuario(@RequestBody @Valid UsuarioDTO usuarioDTO) {
         UsuarioDTO dto = service.insert(usuarioDTO);

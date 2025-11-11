@@ -14,15 +14,19 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins(
+                        .allowedOriginPatterns(
                                 "http://localhost:3000",
                                 "http://127.0.0.1:3000",
-                                "https://localhost:8443"
+                                "http://localhost:8000",
+                                "http://192.168.1.102:8080",
+                                "http://192.168.1.102:8443",
+                                "file://*",
+                                "*" // agora pode usar com allowCredentials(true)
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .exposedHeaders("*")
-                        .allowCredentials(true); // se você usar auth via cookie/jwt
+                        .allowCredentials(true);
             }
         };
     }

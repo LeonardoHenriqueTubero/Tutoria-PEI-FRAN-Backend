@@ -3,6 +3,7 @@ package com.br.tutoria.pei.fran.dtos;
 public class AlunoMinDTO {
     private Long ra;
     private String nome;
+    private Long usuarioId;
 
     public AlunoMinDTO() {}
 
@@ -26,4 +27,7 @@ public class AlunoMinDTO {
     public void setNome(String nome) {
         this.nome = nome;
     }
+
+    public Long getUsuarioId() {return usuarioId;}
+    public void setUsuarioId(Long usuarioId) {this.usuarioId = usuarioId;}
 }

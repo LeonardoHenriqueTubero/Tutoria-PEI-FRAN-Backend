@@ -34,4 +34,13 @@ public class UsuarioController {
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getCpf()).toUri();
         return ResponseEntity.created(uri).body(dto);
     }
+    @PostMapping("/login")
+    public ResponseEntity<UsuarioDTO> login(@RequestBody UsuarioDTO usuarioDTO) {
+        UsuarioDTO usuario = service.login(usuarioDTO.getNome(), usuarioDTO.getCpf());
+        if (usuario != null) {
+            return ResponseEntity.ok(usuario);
+        } else {
+            return ResponseEntity.status(401).build(); // 401 = não autorizado
+        }
+    }
 }

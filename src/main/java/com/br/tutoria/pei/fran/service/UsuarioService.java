@@ -7,6 +7,7 @@ import com.br.tutoria.pei.fran.service.exceptions.EntityAlreadyExistingException
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.Optional;
 
 import java.util.List;
 
@@ -39,5 +40,12 @@ public class UsuarioService {
     private void dtoToEntity(Usuario entity, UsuarioDTO dto) {
         entity.setCpf(dto.getCpf());
         entity.setNome(dto.getNome());
+    }
+    public UsuarioDTO login(String nome, String cpf) {
+        Optional<Usuario> optUsuario = repository.findByNomeAndCpf(nome, cpf);
+        if (optUsuario.isPresent()) {
+            return new UsuarioDTO(optUsuario.get());
+        }
+        return null;
     }
 }

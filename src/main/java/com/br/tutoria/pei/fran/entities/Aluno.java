@@ -22,6 +22,10 @@ public class Aluno {
     private String endereco;
     private String imgUrl;
 
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "dado_familia_id")
     private DadosFamilia dadoFamilia;
@@ -194,6 +198,14 @@ public class Aluno {
 
     public List<Usuario> getUsuarioRegistroAtendimentos() {
         return registroAtendimentos.stream().map(RegistroAtendimento::getUsuario).toList();
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public String getEndereco() {

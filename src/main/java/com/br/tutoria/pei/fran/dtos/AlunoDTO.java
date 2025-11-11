@@ -32,11 +32,14 @@ public class AlunoDTO {
     @NotBlank(message = "Campo requerido")
     private String endereco;
     private String imgUrl;
+    @NotNull(message = "O ID do usuário é obrigatório")
+    private Long usuarioId;
 
     @Valid
     private DadosFamiliaDTO dadoFamilia;
     @Valid
     private EscolaridadeDTO escolaridade;
+
 
     public AlunoDTO() {}
 
@@ -71,7 +74,6 @@ public class AlunoDTO {
         endereco = aluno.getEndereco();
         imgUrl = aluno.getImgUrl();
     }
-
 
     public Long getRa() {
         return ra;
@@ -123,5 +125,13 @@ public class AlunoDTO {
 
     public String getImgUrl() {
         return imgUrl;
+    }
+
+    public Long getUsuarioId() {
+        return usuarioId;
+    }
+
+    public void setUsuarioId(Long usuarioId) {
+        this.usuarioId = usuarioId;
     }
 }

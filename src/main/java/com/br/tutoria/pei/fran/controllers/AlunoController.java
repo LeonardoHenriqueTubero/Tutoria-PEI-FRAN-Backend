@@ -1,6 +1,10 @@
 package com.br.tutoria.pei.fran.controllers;
 
 import com.br.tutoria.pei.fran.dtos.*;
+import com.br.tutoria.pei.fran.entities.Aluno;
+import com.br.tutoria.pei.fran.entities.Usuario;
+import com.br.tutoria.pei.fran.repository.AlunoRepository;
+import com.br.tutoria.pei.fran.repository.UsuarioRepository;
 import com.br.tutoria.pei.fran.service.AlunoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -18,28 +23,79 @@ public class AlunoController {
     private final AlunoService service;
 
     @Autowired
+    private AlunoRepository alunoRepository;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    @Autowired
     public AlunoController(AlunoService service) {
         this.service = service;
     }
 
-    @PostMapping
-    public ResponseEntity<AlunoDTO> insert(@Valid @RequestBody AlunoDTO dto) {
-        dto = service.insert(dto);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{ra}").buildAndExpand(dto.getRa()).toUri();
-        return ResponseEntity.created(uri).body(dto);
-    }
+    // ✅ Cadastrar aluno vinculado a um usuário
     @PostMapping("/simple")
-    public ResponseEntity<AlunoDTO> insertMin(@RequestBody AlunoMinDTO dto) {
-        AlunoDTO aluno = service.insertMin(dto); // converte e salva
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{ra}")
-                .buildAndExpand(aluno.getRa())
-                .toUri();
-        return ResponseEntity.created(uri).body(aluno);
+    public ResponseEntity<?> cadastrarAluno(@RequestBody AlunoMinDTO dto) {
+        try {
+            if (dto.getUsuarioId() == null)
+                return ResponseEntity.badRequest().body("Erro: usuarioId é obrigatório.");
+
+            Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
+                    .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+            Aluno aluno = new Aluno();
+            aluno.setNome(dto.getNome());
+            aluno.setRa(dto.getRa());
+            aluno.setUsuario(usuario);
+
+            alunoRepository.save(aluno);
+
+            URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                    .path("/{ra}")
+                    .buildAndExpand(aluno.getRa())
+                    .toUri();
+
+            return ResponseEntity.created(uri).body(aluno);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("Erro ao salvar aluno: " + e.getMessage());
+        }
     }
+
+    // ✅ Listar apenas alunos de um usuário
+    @GetMapping("/usuario/{id}")
+    public ResponseEntity<List<AlunoMinDTO>> listarPorUsuario(@PathVariable Long id) {
+        List<Aluno> alunos = alunoRepository.findByUsuarioId(id);
+        List<AlunoMinDTO> dtos = alunos.stream()
+                .map(a -> new AlunoMinDTO(a.getRa(), a.getNome()))
+                .toList();
+        return ResponseEntity.ok(dtos);
+    }
+
+    // Outros endpoints (mantidos)
     @GetMapping("/simple")
-    public List<AlunoMinDTO> listarAlunosSimple() {
-        return service.getAllNames(); // ✅ assim funciona
+    public ResponseEntity<?> listarAlunosPorUsuario(@RequestParam(required = false) Long usuarioId) {
+        try {
+            // Se o usuárioId não vier, retorna erro 400 com mensagem amigável
+            if (usuarioId == null) {
+                return ResponseEntity
+                        .badRequest()
+                        .body("Usuário não identificado. Faça login novamente.");
+            }
+
+            List<Aluno> alunos = alunoRepository.findByUsuarioId(usuarioId);
+
+            // Se não tiver alunos
+            if (alunos.isEmpty()) {
+                return ResponseEntity.ok(Collections.emptyList());
+            }
+
+            return ResponseEntity.ok(alunos);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Erro interno ao buscar alunos: " + e.getMessage());
+        }
     }
 
     @GetMapping

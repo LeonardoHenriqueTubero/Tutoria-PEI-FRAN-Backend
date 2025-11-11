@@ -13,5 +13,7 @@ public interface AlunoRepository extends JpaRepository<Aluno, Long> {
 
     @Query("SELECT new com.br.tutoria.pei.fran.dtos.AlunoMinDTO(obj.ra, obj.nome) FROM Aluno obj")
     List<AlunoMinDTO> getAllNames();
+    List<Aluno> findByUsuarioId(Long usuarioId);
+
 }
 

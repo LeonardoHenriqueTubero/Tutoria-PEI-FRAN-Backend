@@ -62,13 +62,33 @@ public class AlunoService {
         aluno = repository.save(aluno);
         return new AlunoDTO(aluno);
     }
+    @Transactional
     public AlunoDTO insertMin(AlunoMinDTO dto) {
+        if (repository.existsById(dto.getRa())) {
+            throw new EntityAlreadyExistingException("Aluno já existente!");
+        }
+
         Aluno aluno = new Aluno();
         aluno.setRa(dto.getRa());
         aluno.setNome(dto.getNome());
-        // os outros campos ficam nulos
+
+        aluno.setEmail("nao_informado@escola.com");
+        aluno.setDataNasc(null);
+        aluno.setIdade(0);
+        aluno.setTelefone(0);
+        aluno.setTransporte("Não informado");
+        aluno.setProjetoVida("Não informado");
+        aluno.setSerie("Não informada");
+        aluno.setEndereco("Não informado");
+        aluno.setImgUrl(null);
+        aluno.setDadoFamilia(null);
+        aluno.setEscolaridade(null);
+        aluno.setParticipacao(null);
+        aluno.setOcorrencias(null);
         aluno = repository.save(aluno);
-        return new AlunoDTO(aluno);
+        AlunoDTO alunoDTO = new AlunoDTO();
+        alunoDTO = new AlunoDTO(aluno);
+        return alunoDTO;
     }
 
     @Transactional

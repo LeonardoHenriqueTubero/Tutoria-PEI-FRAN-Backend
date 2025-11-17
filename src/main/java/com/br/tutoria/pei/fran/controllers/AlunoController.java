@@ -8,6 +8,7 @@ import com.br.tutoria.pei.fran.repository.UsuarioRepository;
 import com.br.tutoria.pei.fran.service.AlunoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -55,7 +56,7 @@ public class AlunoController {
                     .buildAndExpand(aluno.getRa())
                     .toUri();
 
-            return ResponseEntity.created(uri).body(aluno);
+            return ResponseEntity.created(uri).body(aluno.getRa());
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().body("Erro ao salvar aluno: " + e.getMessage());
@@ -90,7 +91,7 @@ public class AlunoController {
                 return ResponseEntity.ok(Collections.emptyList());
             }
 
-            return ResponseEntity.ok(alunos);
+            return ResponseEntity.ok(alunos.get(0).getRa());
 
         } catch (Exception e) {
             e.printStackTrace();

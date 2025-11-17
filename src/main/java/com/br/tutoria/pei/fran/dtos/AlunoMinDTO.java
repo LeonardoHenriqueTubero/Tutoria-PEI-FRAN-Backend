@@ -12,6 +12,12 @@ public class AlunoMinDTO {
         this.nome = nome;
     }
 
+    public AlunoMinDTO(Long ra, String nome, Long usuarioId) {
+        this.ra = ra;
+        this.nome = nome;
+        this.usuarioId = usuarioId;
+    }
+
     public Long getRa() {
         return ra;
     }

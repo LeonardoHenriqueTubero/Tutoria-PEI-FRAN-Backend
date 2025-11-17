@@ -43,7 +43,7 @@ public class AlunoDTO {
 
     public AlunoDTO() {}
 
-    public AlunoDTO(Long ra, String nome, String email, LocalDate dataNasc, Integer idade, Integer telefone, String transporte, String projetoVida, String serie, DadosFamiliaDTO dadosFamilia, String endereco, EscolaridadeDTO escolaridade, String imgUrl) {
+    public AlunoDTO(Long ra, String nome, String email, LocalDate dataNasc, Integer idade, Integer telefone, String transporte, String projetoVida, String serie, DadosFamiliaDTO dadosFamilia, String endereco, EscolaridadeDTO escolaridade, String imgUrl, Long usuarioId) {
         this.ra = ra;
         this.nome = nome;
         this.email = email;
@@ -57,6 +57,7 @@ public class AlunoDTO {
         this.endereco = endereco;
         this.escolaridade = escolaridade;
         this.imgUrl = imgUrl;
+        this.usuarioId = usuarioId;
     }
 
     public AlunoDTO(Aluno aluno) {
@@ -73,6 +74,7 @@ public class AlunoDTO {
         escolaridade = aluno.getEscolaridade() != null ? new EscolaridadeDTO(aluno.getEscolaridade()) : null;
         endereco = aluno.getEndereco();
         imgUrl = aluno.getImgUrl();
+        usuarioId = aluno.getUsuario().getId();
     }
 
     public Long getRa() {

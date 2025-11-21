@@ -6,6 +6,7 @@ import com.br.tutoria.pei.fran.repository.*;
 import com.br.tutoria.pei.fran.service.exceptions.DatabaseException;
 import com.br.tutoria.pei.fran.service.exceptions.EntityAlreadyExistingException;
 import com.br.tutoria.pei.fran.service.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AlunoService {
@@ -22,6 +24,8 @@ public class AlunoService {
     private final EscolaridadeRepository escolaridadeRepository;
     private final ParticipacaoRepository participacaoRepository;
     private final OcorrenciaRepository ocorrenciaRepository;
+    private final AvaliacaoRepository avaliacaoRepository;
+    private final LeituraRepository leituraRepository;
 
     @Autowired
     public AlunoService(
@@ -29,13 +33,15 @@ public class AlunoService {
             DadosFamiliaRepository dadosFamiliarepository,
             EscolaridadeRepository escolaridadeRepository,
             ParticipacaoRepository participacaoRepository,
-            OcorrenciaRepository ocorrenciaRepository
-    ) {
+            OcorrenciaRepository ocorrenciaRepository,
+            AvaliacaoRepository avaliacaoRepository, LeituraRepository leituraRepository) {
         this.repository = repository;
         this.dadosFamiliarepository = dadosFamiliarepository;
         this.escolaridadeRepository = escolaridadeRepository;
         this.participacaoRepository = participacaoRepository;
         this.ocorrenciaRepository = ocorrenciaRepository;
+        this.avaliacaoRepository = avaliacaoRepository;
+        this.leituraRepository = leituraRepository;
     }
 
     @Transactional
@@ -117,7 +123,6 @@ public class AlunoService {
         return new AlunoDTO(aluno);
     }
 
-    //Não estou certo desse tanto de idas no banco de dados
     @Transactional(propagation = Propagation.SUPPORTS)
     public void delete(Long ra) {
         if (!repository.existsById(ra)) {
@@ -144,8 +149,21 @@ public class AlunoService {
     @Transactional
     public ParticipacaoDTO addParticipacao(Long ra, ParticipacaoDTO dto) {
         Aluno aluno = repository.getReferenceById(ra);
-        Participacao participacao = participacaoRepository.getReferenceById(dto.getId());
+
+        Participacao participacao;
+
+        if (dto.getId() != null) {
+            participacao = participacaoRepository.findById(dto.getId())
+                    .orElseThrow(() -> new EntityNotFoundException("Participação não encontrada: id = " + dto.getId()));
+        }
+        else {
+            participacao = new Participacao();
+        }
+
         dtoToParticipacao(participacao, dto);
+
+        participacao = participacaoRepository.save(participacao);
+
         participacao.setAluno(aluno);
         aluno.setParticipacao(participacao);
 
@@ -163,11 +181,22 @@ public class AlunoService {
 
     @Transactional
     public AvaliacaoDTO addAvaliacao(Long ra, AvaliacaoDTO avaliacaoDTO) {
+        Optional<Avaliacao> existente = avaliacaoRepository.findByAlunoRaAndPeriodoAndTipoAndMateriaAndNumQuestoesAndNumAcertos(
+                        ra,
+                        avaliacaoDTO.getPeriodo(),
+                        avaliacaoDTO.getTipo(),
+                        avaliacaoDTO.getMateria(),
+                        avaliacaoDTO.getNumQuestoes(),
+                        avaliacaoDTO.getNumAcertos()
+                );
+
+        if (existente.isPresent()) {
+            return new AvaliacaoDTO(existente.get());
+        }
+
         Aluno aluno = repository.getReferenceById(ra);
         Avaliacao avaliacao = new Avaliacao();
-
         dtoToAvaliacao(avaliacao, avaliacaoDTO);
-
         avaliacao.setAluno(aluno);
         aluno.addAvaliacao(avaliacao);
 
@@ -184,16 +213,24 @@ public class AlunoService {
     }
 
     @Transactional
-    public OcorrenciaDTO addOcorrencia(Long ra, OcorrenciaDTO ocorrenciaDTO) {
-        Aluno aluno = repository.getReferenceById(ra);
-        Ocorrencia ocorrencia = ocorrenciaRepository.getReferenceById(ocorrenciaDTO.getId());
-        dtoToOcorrencia(ocorrencia, ocorrenciaDTO);
-        ocorrencia.setAluno(aluno);
+    public OcorrenciaDTO addOcorrencia(Long ra, OcorrenciaDTO dto) {
+
+        Aluno aluno = repository.findById(ra)
+                .orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
+
+        Ocorrencia ocorrencia = aluno.getOcorrencias();
+
+        if (ocorrencia == null) {
+            ocorrencia = new Ocorrencia();
+            ocorrencia.setAluno(aluno);
+        }
+
+        dtoToOcorrencia(ocorrencia, dto);
+
+        ocorrenciaRepository.save(ocorrencia);
         aluno.setOcorrencias(ocorrencia);
 
-        aluno = repository.save(aluno);
-
-        return new OcorrenciaDTO(aluno.getOcorrencias());
+        return new OcorrenciaDTO(ocorrencia);
     }
 
     @Transactional(readOnly = true)
@@ -205,12 +242,28 @@ public class AlunoService {
 
     @Transactional
     public LeituraDTO addLeitura(Long ra, LeituraDTO dto) {
-        Aluno aluno = repository.getReferenceById(ra);
-        Leitura leitura = new Leitura();
-        dtoToLeitura(leitura, dto);
 
-        leitura.setAluno(aluno);
-        aluno.addLeitura(leitura);
+        Aluno aluno = repository.getReferenceById(ra);
+
+        Optional<Leitura> existente =
+                leituraRepository.findByAlunoRaAndBimestreAndLivro(
+                        ra,
+                        dto.getBimestre(),
+                        dto.getLivro()
+                );
+
+        Leitura leitura;
+
+        if (existente.isPresent()) {
+            leitura = existente.get();
+        } else {
+            leitura = new Leitura();
+            leitura.setBimestre(dto.getBimestre());
+            leitura.setLivro(dto.getLivro());
+            leitura.setAluno(aluno);
+
+            aluno.addLeitura(leitura);
+        }
 
         return new LeituraDTO(leitura);
     }
@@ -281,6 +334,7 @@ public class AlunoService {
         avaliacao.setMateria(dto.getMateria());
         avaliacao.setNumQuestoes(dto.getNumQuestoes());
         avaliacao.setNumAcertos(dto.getNumAcertos());
+        avaliacao.setPeriodo(dto.getPeriodo());
     }
 
     private static void dtoToOcorrencia(Ocorrencia ocorrencia, OcorrenciaDTO dto) {

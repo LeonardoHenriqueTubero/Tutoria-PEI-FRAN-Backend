@@ -34,7 +34,6 @@ public class AlunoController {
         this.service = service;
     }
 
-    // ✅ Cadastrar aluno vinculado a um usuário
     @PostMapping("/simple")
     public ResponseEntity<?> cadastrarAluno(@RequestBody AlunoMinDTO dto) {
         try {
@@ -63,7 +62,6 @@ public class AlunoController {
         }
     }
 
-    // ✅ Listar apenas alunos de um usuário
     @GetMapping("/usuario/{id}")
     public ResponseEntity<List<AlunoMinDTO>> listarPorUsuario(@PathVariable Long id) {
         List<Aluno> alunos = alunoRepository.findByUsuarioId(id);
@@ -77,7 +75,6 @@ public class AlunoController {
     @GetMapping("/simple")
     public ResponseEntity<?> listarAlunosPorUsuario(@RequestParam(required = false) Long usuarioId) {
         try {
-            // Se o usuárioId não vier, retorna erro 400 com mensagem amigável
             if (usuarioId == null) {
                 return ResponseEntity
                         .badRequest()
@@ -86,12 +83,11 @@ public class AlunoController {
 
             List<Aluno> alunos = alunoRepository.findByUsuarioId(usuarioId);
 
-            // Se não tiver alunos
             if (alunos.isEmpty()) {
                 return ResponseEntity.ok(Collections.emptyList());
             }
 
-            return ResponseEntity.ok(alunos.get(0).getRa());
+            return ResponseEntity.ok(alunos.toString());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -123,9 +119,18 @@ public class AlunoController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping(value =  "/{ra}/participacao")
+    public ResponseEntity<?> addParticipacao(
+            @PathVariable Long ra,
+            @Valid @RequestBody ParticipacaoDTO dto) {
+
+        ParticipacaoDTO saved = service.addParticipacao(ra, dto);
+        return ResponseEntity.ok(saved.getId());
+    }
+
     //Mudar isso depois
     @PutMapping(value = "/{ra}/participacao")
-    public ResponseEntity<ParticipacaoDTO> addParticipacao(@PathVariable Long ra, @RequestBody ParticipacaoDTO participacaoDTO) {
+    public ResponseEntity<ParticipacaoDTO> editParticipacao(@PathVariable Long ra, @RequestBody ParticipacaoDTO participacaoDTO) {
         participacaoDTO = service.addParticipacao(ra, participacaoDTO);
         return ResponseEntity.ok(participacaoDTO);
     }
@@ -149,11 +154,18 @@ public class AlunoController {
         return ResponseEntity.ok(dtos);
     }
 
-    //Mudar isso depois
-    @PutMapping(value = "/{ra}/ocorrencias")
-    public ResponseEntity<OcorrenciaDTO> addOcorrencias(@PathVariable Long ra, @Valid @RequestBody OcorrenciaDTO dto) {
-        dto = service.addOcorrencia(ra, dto);
+    @PostMapping(value = "/{ra}/ocorrencias")
+    public ResponseEntity<OcorrenciaDTO> getAllOcorrencias(@PathVariable Long ra, @Valid @RequestBody OcorrenciaDTO dto) {
+        OcorrenciaDTO ocorrenciaDTO = service.addOcorrencia(ra, dto);
+        dto = service.addOcorrencia(ra, ocorrenciaDTO);
         return ResponseEntity.ok(dto);
+    }
+
+    //Mudar isso depois
+    @PutMapping("/{ra}/ocorrencias")
+    public ResponseEntity<?> addOcorrencias(@PathVariable Long ra, @Valid @RequestBody OcorrenciaDTO dto) {
+        OcorrenciaDTO saved = service.addOcorrencia(ra, dto);
+        return ResponseEntity.status(201).body(saved);
     }
 
     @GetMapping(value = "/{ra}/ocorrencias")

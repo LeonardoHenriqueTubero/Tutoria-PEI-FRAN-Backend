@@ -15,6 +15,7 @@ public class Avaliacao {
     private String materia;
     private Integer numQuestoes;
     private Double numAcertos;
+    private String periodo;
 
     @ManyToOne
     @JoinColumn(name = "aluno_ra")
@@ -22,13 +23,14 @@ public class Avaliacao {
 
     public Avaliacao() {}
 
-    public Avaliacao(Long id, String tipo, String materia, Integer numQuestoes, Double numAcertos, Aluno aluno) {
+    public Avaliacao(Long id, String tipo, String materia, Integer numQuestoes, Double numAcertos, Aluno aluno, String periodo) {
         this.id = id;
         this.tipo = tipo;
         this.materia = materia;
         this.numQuestoes = numQuestoes;
         this.numAcertos = numAcertos;
         this.aluno = aluno;
+        this.periodo = periodo;
     }
 
     public Long getId() {
@@ -69,6 +71,14 @@ public class Avaliacao {
 
     public void setNumAcertos(Double numAcertos) {
         this.numAcertos = numAcertos;
+    }
+
+    public String getPeriodo() {
+        return periodo;
+    }
+
+    public void setPeriodo(String periodo) {
+        this.periodo = periodo;
     }
 
     public Aluno getAluno() {

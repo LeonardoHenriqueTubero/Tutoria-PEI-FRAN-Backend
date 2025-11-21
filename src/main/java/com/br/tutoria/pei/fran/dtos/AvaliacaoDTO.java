@@ -18,15 +18,18 @@ public class AvaliacaoDTO {
     @NotNull(message = "Campo requerido")
     @Positive(message = "Valor nao pode ser negativo")
     private Double numAcertos;
+    @NotBlank(message = "Campo requerido")
+    private String periodo;
 
     public AvaliacaoDTO() {}
 
-    public AvaliacaoDTO(Long id, String tipo, String materia, Integer numQuestoes, Double numAcertos) {
+    public AvaliacaoDTO(Long id, String tipo, String materia, Integer numQuestoes, Double numAcertos, String periodo) {
         this.id = id;
         this.tipo = tipo;
         this.materia = materia;
         this.numQuestoes = numQuestoes;
         this.numAcertos = numAcertos;
+        this.periodo = periodo;
     }
 
     public AvaliacaoDTO(Avaliacao avaliacao) {
@@ -35,6 +38,7 @@ public class AvaliacaoDTO {
         materia = avaliacao.getMateria();
         numQuestoes = avaliacao.getNumQuestoes();
         numAcertos = avaliacao.getNumAcertos();
+        periodo = avaliacao.getPeriodo();
     }
 
     public Long getId() {
@@ -56,4 +60,6 @@ public class AvaliacaoDTO {
     public Double getNumAcertos() {
         return numAcertos;
     }
+
+    public String getPeriodo() { return periodo; }
 }

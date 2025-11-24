@@ -41,10 +41,10 @@ public class Aluno {
     @JoinColumn(name = "participacao_id")
     private Participacao participacao;
 
-    @OneToMany(mappedBy = "id.aluno")
+    @OneToMany(mappedBy = "aluno", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<Tutoria> tutorias = new HashSet<>();
 
-    @OneToMany(mappedBy = "id.aluno")
+    @OneToMany(mappedBy = "aluno", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<RegistroAtendimento> registroAtendimentos = new HashSet<>();
 
     @OneToMany(mappedBy = "aluno", cascade = CascadeType.ALL, orphanRemoval = true)

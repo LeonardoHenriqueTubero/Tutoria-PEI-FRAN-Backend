@@ -36,7 +36,7 @@ public class TutoriaDTO {
 
     public TutoriaDTO(Tutoria tutoria) {
         id = tutoria.getId();
-        alunoRA = tutoria.getAlunoRA();
+        alunoRA = tutoria.getAluno().getRa();
         data = tutoria.getData();
         tarefaCMSP = tutoria.getTarefaCMSP();
         redacao = tutoria.getRedacao();

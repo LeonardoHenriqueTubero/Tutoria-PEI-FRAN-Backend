@@ -12,7 +12,6 @@ public class Tutoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long alunoRA;
     private LocalDate data;
     private Boolean tarefaCMSP;
     private Boolean redacao;
@@ -23,11 +22,14 @@ public class Tutoria {
     private Boolean outros;
     private String observacoesProfessor;
 
+    @ManyToOne
+    @JoinColumn(name = "aluno_ra")
+    private Aluno aluno;
+
     public Tutoria() {}
 
-    public Tutoria(Long id, Long alunoRA, LocalDate data, Boolean tarefaCMSP, Boolean redacao, Boolean leitura, Boolean provaPaulista, Boolean avaliacoes, Boolean dificuldades, Boolean outros, String observacoesProfessor) {
+    public Tutoria(Long id, LocalDate data, Boolean tarefaCMSP, Boolean redacao, Boolean leitura, Boolean provaPaulista, Boolean avaliacoes, Boolean dificuldades, Boolean outros, String observacoesProfessor, Aluno aluno) {
         this.id = id;
-        this.alunoRA = alunoRA;
         this.data = data;
         this.tarefaCMSP = tarefaCMSP;
         this.redacao = redacao;
@@ -37,6 +39,7 @@ public class Tutoria {
         this.dificuldades = dificuldades;
         this.outros = outros;
         this.observacoesProfessor = observacoesProfessor;
+        this.aluno = aluno;
     }
 
     public Long getId() {
@@ -45,14 +48,6 @@ public class Tutoria {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getAlunoRA() {
-        return alunoRA;
-    }
-
-    public void setAlunoRA(Long alunoRA) {
-        this.alunoRA = alunoRA;
     }
 
     public LocalDate getData() {
@@ -125,6 +120,14 @@ public class Tutoria {
 
     public void setObservacoesProfessor(String observacoesProfessor) {
         this.observacoesProfessor = observacoesProfessor;
+    }
+
+    public Aluno getAluno() {
+        return aluno;
+    }
+
+    public void setAluno(Aluno aluno) {
+        this.aluno = aluno;
     }
 
     @Override

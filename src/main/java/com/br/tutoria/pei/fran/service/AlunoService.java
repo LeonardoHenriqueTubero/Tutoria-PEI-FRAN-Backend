@@ -351,7 +351,6 @@ public class AlunoService {
 
     private static void dtoToRegistro(RegistroAtendimento registro, RegistroAtendimentoDTO dto) {
         registro.setId(dto.getId());
-        registro.setAlunoRA(dto.getIdAluno());
         registro.setData(dto.getData());
         registro.setAssunto(dto.getAssunto());
         registro.setObservacoesProfessor(dto.getObservacoesProfessor());
@@ -359,7 +358,6 @@ public class AlunoService {
 
     private static void dtoToTutoria(Tutoria tutoria, TutoriaDTO dto) {
         tutoria.setId(dto.getId());
-        tutoria.setAlunoRA(dto.getAlunoRA());
         tutoria.setData(dto.getData());
         tutoria.setTarefaCMSP(dto.getTarefaCMSP());
         tutoria.setRedacao(dto.getRedacao());

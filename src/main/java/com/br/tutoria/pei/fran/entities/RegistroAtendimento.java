@@ -12,19 +12,22 @@ public class RegistroAtendimento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long alunoRA;
     private LocalDate data;
     private String assunto;
     private String observacoesProfessor;
 
+    @ManyToOne
+    @JoinColumn(name = "aluno_ra")
+    private Aluno aluno;
+
     public RegistroAtendimento() {}
 
-    public RegistroAtendimento(Long id, Long alunoRA, LocalDate data, String assunto, String observacoesProfessor) {
+    public RegistroAtendimento(Long id, LocalDate data, String assunto, String observacoesProfessor, Aluno aluno) {
         this.id = id;
-        this.alunoRA = alunoRA;
         this.data = data;
         this.assunto = assunto;
         this.observacoesProfessor = observacoesProfessor;
+        this.aluno = aluno;
     }
 
     public Long getId() {
@@ -33,14 +36,6 @@ public class RegistroAtendimento {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getAlunoRA() {
-        return alunoRA;
-    }
-
-    public void setAlunoRA(Long alunoRA) {
-        this.alunoRA = alunoRA;
     }
 
     public LocalDate getData() {
@@ -65,6 +60,14 @@ public class RegistroAtendimento {
 
     public void setObservacoesProfessor(String observacoesProfessor) {
         this.observacoesProfessor = observacoesProfessor;
+    }
+
+    public Aluno getAluno() {
+        return aluno;
+    }
+
+    public void setAluno(Aluno aluno) {
+        this.aluno = aluno;
     }
 
     @Override

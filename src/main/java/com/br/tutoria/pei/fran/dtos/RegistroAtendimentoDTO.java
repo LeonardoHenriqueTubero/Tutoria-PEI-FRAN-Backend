@@ -24,7 +24,7 @@ public class RegistroAtendimentoDTO {
 
     public RegistroAtendimentoDTO(RegistroAtendimento registro) {
         id = registro.getId();
-        idAluno = registro.getAlunoRA();
+        idAluno = registro.getAluno().getRa();
         data = registro.getData();
         assunto = registro.getAssunto();
         observacoesProfessor = registro.getObservacoesProfessor();

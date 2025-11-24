@@ -186,4 +186,6 @@ public class AlunoController {
         List<LeituraDTO> dtos = service.getAllLeituras(ra);
         return ResponseEntity.ok(dtos);
     }
+
+
 }

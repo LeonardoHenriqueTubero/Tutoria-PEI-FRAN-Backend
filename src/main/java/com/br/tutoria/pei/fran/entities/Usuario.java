@@ -4,7 +4,6 @@ package com.br.tutoria.pei.fran.entities;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -17,7 +16,7 @@ public class Usuario {
     private String cpf;
     private String nome;
 
-       @OneToMany(mappedBy = "id.usuario")
+    @OneToMany(mappedBy = "id.usuario")
     Set<Tutoria> tutorias = new HashSet<>();
 
     @OneToMany(mappedBy = "id.usuario")
@@ -56,22 +55,4 @@ public class Usuario {
     public void setNome(String nome) {
         this.nome = nome;
     }
-
-    public Set<Tutoria> getTutorias() {
-        return tutorias;
-    }
-
-    public List<Aluno> getAlunosTutorias() {
-        return tutorias.stream().map(Tutoria::getAluno).toList();
-    }
-
-    public Set<RegistroAtendimento> getRegistroAtendimentos() {
-        return registroAtendimentos;
-    }
-
-    public List<Aluno> getAlunosRegistroAtendimentos() {
-        return registroAtendimentos.stream().map(RegistroAtendimento::getAluno).toList();
-    }
-
-
 }

@@ -348,4 +348,26 @@ public class AlunoService {
         leitura.setBimestre(dto.getBimestre());
         leitura.setLivro(dto.getLivro());
     }
+
+    private static void dtoToRegistro(RegistroAtendimento registro, RegistroAtendimentoDTO dto) {
+        registro.setId(dto.getId());
+        registro.setAlunoRA(dto.getIdAluno());
+        registro.setData(dto.getData());
+        registro.setAssunto(dto.getAssunto());
+        registro.setObservacoesProfessor(dto.getObservacoesProfessor());
+    }
+
+    private static void dtoToTutoria(Tutoria tutoria, TutoriaDTO dto) {
+        tutoria.setId(dto.getId());
+        tutoria.setAlunoRA(dto.getAlunoRA());
+        tutoria.setData(dto.getData());
+        tutoria.setTarefaCMSP(dto.getTarefaCMSP());
+        tutoria.setRedacao(dto.getRedacao());
+        tutoria.setLeitura(dto.getLeitura());
+        tutoria.setProvaPaulista(dto.getProvaPaulista());
+        tutoria.setAvaliacoes(dto.getAvaliacoes());
+        tutoria.setDificuldades(dto.getDificuldades());
+        tutoria.setOutros(dto.getOutros());
+        tutoria.setObservacoesProfessor(dto.getObservacoesProfessor());
+    }
 }

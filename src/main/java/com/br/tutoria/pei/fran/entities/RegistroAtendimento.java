@@ -1,8 +1,6 @@
 package com.br.tutoria.pei.fran.entities;
 
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -11,20 +9,38 @@ import java.util.Objects;
 @Table(name = "tb_registro_atendimento")
 public class RegistroAtendimento {
 
-    @EmbeddedId
-    private RegistroAtendimentoPK id = new RegistroAtendimentoPK();
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private Long alunoRA;
     private LocalDate data;
     private String assunto;
     private String observacoesProfessor;
 
     public RegistroAtendimento() {}
 
-    public RegistroAtendimento(Aluno aluno, Usuario usuario, LocalDate data, String assunto, String observacoesProfessor) {
-        id.setAluno(aluno);
-        id.setUsuario(usuario);
+    public RegistroAtendimento(Long id, Long alunoRA, LocalDate data, String assunto, String observacoesProfessor) {
+        this.id = id;
+        this.alunoRA = alunoRA;
         this.data = data;
         this.assunto = assunto;
         this.observacoesProfessor = observacoesProfessor;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getAlunoRA() {
+        return alunoRA;
+    }
+
+    public void setAlunoRA(Long alunoRA) {
+        this.alunoRA = alunoRA;
     }
 
     public LocalDate getData() {
@@ -49,22 +65,6 @@ public class RegistroAtendimento {
 
     public void setObservacoesProfessor(String observacoesProfessor) {
         this.observacoesProfessor = observacoesProfessor;
-    }
-
-    public Aluno getAluno() {
-        return id.getAluno();
-    }
-
-    public void setAluno(Aluno aluno) {
-        id.setAluno(aluno);
-    }
-
-    public Usuario getUsuario() {
-        return id.getUsuario();
-    }
-
-    public void setUsuario(Usuario usuario) {
-        id.setUsuario(usuario);
     }
 
     @Override

@@ -1,8 +1,6 @@
 package com.br.tutoria.pei.fran.entities;
 
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -11,8 +9,10 @@ import java.util.Objects;
 @Table(name = "tb_tutoria")
 public class Tutoria {
 
-    @EmbeddedId
-    private TutoriaPK id = new TutoriaPK();
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private Long alunoRA;
     private LocalDate data;
     private Boolean tarefaCMSP;
     private Boolean redacao;
@@ -25,9 +25,9 @@ public class Tutoria {
 
     public Tutoria() {}
 
-    public Tutoria(Aluno aluno, Usuario usuario, LocalDate data, Boolean tarefaCMSP, Boolean redacao, Boolean leitura, Boolean provaPaulista, Boolean avaliacoes, Boolean dificuldades, Boolean outros, String observacoesProfessor) {
-        id.setAluno(aluno);
-        id.setUsuario(usuario);
+    public Tutoria(Long id, Long alunoRA, LocalDate data, Boolean tarefaCMSP, Boolean redacao, Boolean leitura, Boolean provaPaulista, Boolean avaliacoes, Boolean dificuldades, Boolean outros, String observacoesProfessor) {
+        this.id = id;
+        this.alunoRA = alunoRA;
         this.data = data;
         this.tarefaCMSP = tarefaCMSP;
         this.redacao = redacao;
@@ -37,6 +37,22 @@ public class Tutoria {
         this.dificuldades = dificuldades;
         this.outros = outros;
         this.observacoesProfessor = observacoesProfessor;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getAlunoRA() {
+        return alunoRA;
+    }
+
+    public void setAlunoRA(Long alunoRA) {
+        this.alunoRA = alunoRA;
     }
 
     public LocalDate getData() {
@@ -109,22 +125,6 @@ public class Tutoria {
 
     public void setObservacoesProfessor(String observacoesProfessor) {
         this.observacoesProfessor = observacoesProfessor;
-    }
-
-    public Aluno getAluno() {
-        return id.getAluno();
-    }
-
-    public void setAluno(Aluno aluno) {
-        id.setAluno(aluno);
-    }
-
-    public Usuario getUsuario() {
-        return id.getUsuario();
-    }
-
-    public void setUsuario(Usuario usuario) {
-        id.setUsuario(usuario);
     }
 
     @Override

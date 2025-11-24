@@ -1,6 +1,6 @@
-INSERT INTO tb_usuario (cpf, nome) VALUES ('$2a$10$eACCYoNOHEqXve8aIWT8Nu3PkMXWBaOxJ9aORUYzfMQCbVBIhZ8tG', 'Rodrigo Soares');
-INSERT INTO tb_usuario (cpf, nome) VALUES ('$2a$10$eACCYoNOHEqXve8aIWT8Nu3PkMXWBaOxJ9aORUYzfMQCbVBIhZ8tG', 'Matheus César');
-INSERT INTO tb_usuario (cpf, nome) VALUES ('$2a$10$eACCYoNOHEqXve8aIWT8Nu3PkMXWBaOxJ9aORUYzfMQCbVBIhZ8tG', 'Paulo');
+INSERT INTO tb_usuario (cpf, nome) VALUES ('123456', 'Rodrigo Soares');
+INSERT INTO tb_usuario (cpf, nome) VALUES ('654321', 'Matheus César');
+INSERT INTO tb_usuario (cpf, nome) VALUES ('321654', 'Paulo');
 
 INSERT INTO tb_dados_familia (pai, mae, responsavel, estrutura_familiar, num_pai, num_mae, num_responsavel) VALUES ('José Mendes', 'Andréia Mendes', '', 'separados, mora com a mãe', 987654321, 987654321, NULL);
 INSERT INTO tb_dados_familia (pai, mae, responsavel, estrutura_familiar, num_pai, num_mae, num_responsavel) VALUES ('Nélio Alves', 'Carla Alves', 'Henrique Alves', 'separados, mora com o avô', NULL, NULL, 234567890);

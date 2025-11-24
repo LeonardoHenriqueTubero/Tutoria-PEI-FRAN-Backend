@@ -6,6 +6,7 @@ import java.time.LocalDate;
 
 public class TutoriaDTO {
 
+    private Long id;
     private Long alunoRA;
     private LocalDate data;
     private Boolean tarefaCMSP;
@@ -19,7 +20,8 @@ public class TutoriaDTO {
 
     public TutoriaDTO() {}
 
-    public TutoriaDTO(Long alunoRA, LocalDate data, Boolean tarefaCMSP, Boolean redacao, Boolean leitura, Boolean provaPaulista, Boolean avaliacoes, Boolean dificuldades, Boolean outros, String observacoesProfessor) {
+    public TutoriaDTO(Long id, Long alunoRA, LocalDate data, Boolean tarefaCMSP, Boolean redacao, Boolean leitura, Boolean provaPaulista, Boolean avaliacoes, Boolean dificuldades, Boolean outros, String observacoesProfessor) {
+        this.id = id;
         this.alunoRA = alunoRA;
         this.data = data;
         this.tarefaCMSP = tarefaCMSP;
@@ -33,7 +35,8 @@ public class TutoriaDTO {
     }
 
     public TutoriaDTO(Tutoria tutoria) {
-        alunoRA = tutoria.getAluno().getRa();
+        id = tutoria.getId();
+        alunoRA = tutoria.getAlunoRA();
         data = tutoria.getData();
         tarefaCMSP = tutoria.getTarefaCMSP();
         redacao = tutoria.getRedacao();
@@ -43,6 +46,10 @@ public class TutoriaDTO {
         dificuldades = tutoria.getDificuldades();
         outros = tutoria.getOutros();
         observacoesProfessor = tutoria.getObservacoesProfessor();
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public Long getAlunoRA() {

@@ -184,22 +184,6 @@ public class Aluno {
         leituras.add(leitura);
     }
 
-    public Set<Tutoria> getTutorias() {
-        return tutorias;
-    }
-
-    public List<Usuario> getUsuarioTutorias() {
-        return tutorias.stream().map(Tutoria::getUsuario).toList();
-    }
-
-    public Set<RegistroAtendimento> getRegistroAtendimentos() {
-        return registroAtendimentos;
-    }
-
-    public List<Usuario> getUsuarioRegistroAtendimentos() {
-        return registroAtendimentos.stream().map(RegistroAtendimento::getUsuario).toList();
-    }
-
     public Usuario getUsuario() {
         return usuario;
     }
@@ -231,8 +215,6 @@ public class Aluno {
     public void setOcorrencias(Ocorrencia ocorrencias) {
         this.ocorrencias = ocorrencias;
     }
-
-
 
     @Override
     public boolean equals(Object o) {

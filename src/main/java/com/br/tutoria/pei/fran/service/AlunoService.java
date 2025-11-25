@@ -26,6 +26,8 @@ public class AlunoService {
     private final OcorrenciaRepository ocorrenciaRepository;
     private final AvaliacaoRepository avaliacaoRepository;
     private final LeituraRepository leituraRepository;
+    private final RegistroAtendimentoRepository registroAtendimentoRepository;
+    private final TutoriaRepository tutoriaRepository;
 
     @Autowired
     public AlunoService(
@@ -34,7 +36,11 @@ public class AlunoService {
             EscolaridadeRepository escolaridadeRepository,
             ParticipacaoRepository participacaoRepository,
             OcorrenciaRepository ocorrenciaRepository,
-            AvaliacaoRepository avaliacaoRepository, LeituraRepository leituraRepository) {
+            AvaliacaoRepository avaliacaoRepository,
+            LeituraRepository leituraRepository,
+            RegistroAtendimentoRepository registroAtendimentoRepository,
+            TutoriaRepository tutoriaRepository
+    ) {
         this.repository = repository;
         this.dadosFamiliarepository = dadosFamiliarepository;
         this.escolaridadeRepository = escolaridadeRepository;
@@ -42,6 +48,8 @@ public class AlunoService {
         this.ocorrenciaRepository = ocorrenciaRepository;
         this.avaliacaoRepository = avaliacaoRepository;
         this.leituraRepository = leituraRepository;
+        this.registroAtendimentoRepository = registroAtendimentoRepository;
+        this.tutoriaRepository = tutoriaRepository;
     }
 
     @Transactional
@@ -275,6 +283,29 @@ public class AlunoService {
         return aluno.getLeituras().stream().map(LeituraDTO::new).toList();
     }
 
+    @Transactional
+    public RegistroAtendimentoDTO addRegistroAtendimento (Long ra, RegistroAtendimentoDTO dto) {
+        Aluno aluno = repository.getReferenceById(ra);
+        RegistroAtendimento atendimento = new RegistroAtendimento();
+
+        dtoToRegistro(atendimento, dto);
+        atendimento.setAluno(aluno);
+        aluno.addRegistroAtendimento(atendimento);
+
+        return new RegistroAtendimentoDTO(atendimento);
+    }
+
+    @Transactional
+    public TutoriaDTO addTutoria(Long ra, TutoriaDTO dto){
+        Aluno aluno = repository.getReferenceById(ra);
+        Tutoria tutoria = new Tutoria();
+
+        dtoToTutoria(tutoria, dto);
+        tutoria.setAluno(aluno);
+        aluno.addTutoria(tutoria);
+
+        return new TutoriaDTO(tutoria);
+    }
     private void dtoToEntity(AlunoDTO dto, Aluno entity) {
         entity.setRa(dto.getRa());
         entity.setNome(dto.getNome());
@@ -350,14 +381,12 @@ public class AlunoService {
     }
 
     private static void dtoToRegistro(RegistroAtendimento registro, RegistroAtendimentoDTO dto) {
-        registro.setId(dto.getId());
         registro.setData(dto.getData());
         registro.setAssunto(dto.getAssunto());
         registro.setObservacoesProfessor(dto.getObservacoesProfessor());
     }
 
     private static void dtoToTutoria(Tutoria tutoria, TutoriaDTO dto) {
-        tutoria.setId(dto.getId());
         tutoria.setData(dto.getData());
         tutoria.setTarefaCMSP(dto.getTarefaCMSP());
         tutoria.setRedacao(dto.getRedacao());

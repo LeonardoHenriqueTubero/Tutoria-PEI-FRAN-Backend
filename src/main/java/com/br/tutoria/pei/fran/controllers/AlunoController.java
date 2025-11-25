@@ -8,7 +8,6 @@ import com.br.tutoria.pei.fran.repository.UsuarioRepository;
 import com.br.tutoria.pei.fran.service.AlunoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -187,5 +186,17 @@ public class AlunoController {
         return ResponseEntity.ok(dtos);
     }
 
+    @PostMapping(value = "{ra}/tutoria")
+    public ResponseEntity<TutoriaDTO> addTutoria(@PathVariable Long ra, @RequestBody TutoriaDTO dto) {
+        dto = service.addTutoria(ra, dto);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
+        return ResponseEntity.created(uri).body(dto);
+    }
 
+    @PostMapping(value = "{ra}/registroAtendimentos")
+    public ResponseEntity<RegistroAtendimentoDTO> addRegistroAtendimento(@PathVariable Long ra, @RequestBody RegistroAtendimentoDTO dto) {
+        dto = service.addRegistroAtendimento(ra, dto);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
+        return ResponseEntity.created(uri).body(dto);
+    }
 }

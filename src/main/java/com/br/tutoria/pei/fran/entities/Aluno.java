@@ -42,10 +42,10 @@ public class Aluno {
     private Participacao participacao;
 
     @OneToMany(mappedBy = "aluno", cascade = CascadeType.ALL, orphanRemoval = true)
-    Set<Tutoria> tutorias = new HashSet<>();
+    List<Tutoria> tutorias = new ArrayList<>();
 
     @OneToMany(mappedBy = "aluno", cascade = CascadeType.ALL, orphanRemoval = true)
-    Set<RegistroAtendimento> registroAtendimentos = new HashSet<>();
+    List<RegistroAtendimento> registroAtendimentos = new ArrayList<>();
 
     @OneToMany(mappedBy = "aluno", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Leitura> leituras = new ArrayList<>();
@@ -214,6 +214,22 @@ public class Aluno {
 
     public void setOcorrencias(Ocorrencia ocorrencias) {
         this.ocorrencias = ocorrencias;
+    }
+
+    public List<Tutoria> getTutorias() {
+        return tutorias;
+    }
+
+    public List<RegistroAtendimento> getRegistroAtendimentos() {
+        return registroAtendimentos;
+    }
+
+    public void addTutoria(Tutoria tutoria) {
+        tutorias.add(tutoria);
+    }
+
+    public void addRegistroAtendimento(RegistroAtendimento registroAtendimento) {
+        registroAtendimentos.add(registroAtendimento);
     }
 
     @Override

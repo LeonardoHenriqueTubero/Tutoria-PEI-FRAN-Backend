@@ -3,9 +3,6 @@ package com.br.tutoria.pei.fran.entities;
 
 import jakarta.persistence.*;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Entity
 @Table(name = "tb_usuario")
 public class Usuario {
@@ -16,12 +13,6 @@ public class Usuario {
     private String cpf;
     private String nome;
 
-    @OneToMany(mappedBy = "id.usuario")
-    Set<Tutoria> tutorias = new HashSet<>();
-
-    @OneToMany(mappedBy = "id.usuario")
-    Set<RegistroAtendimento> registroAtendimentos = new HashSet<>();
-
     public Usuario(Long id, String cpf, String nome) {
         this.id = id;
         this.cpf = cpf;
@@ -29,7 +20,6 @@ public class Usuario {
     }
 
     public Usuario() {
-
     }
 
     public Long getId() {

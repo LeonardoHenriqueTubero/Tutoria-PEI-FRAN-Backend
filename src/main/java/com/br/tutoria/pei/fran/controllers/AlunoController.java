@@ -118,7 +118,7 @@ public class AlunoController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping(value =  "/{ra}/participacao")
+    @PostMapping(value = "/{ra}/participacao")
     public ResponseEntity<?> addParticipacao(
             @PathVariable Long ra,
             @Valid @RequestBody ParticipacaoDTO dto) {
@@ -180,23 +180,41 @@ public class AlunoController {
         return ResponseEntity.created(uri).body(dto);
     }
 
+    @PutMapping(value = "/{ra}/leituras/{id}")
+    public ResponseEntity<?> updateLeitura(@PathVariable Long ra, @PathVariable Long id, @Valid @RequestBody LeituraDTO dto) {
+        LeituraDTO update = service.updateLeitura(ra, id, dto);
+        return ResponseEntity.ok(update);
+    }
+
     @GetMapping(value = "/{ra}/leituras")
     public ResponseEntity<List<LeituraDTO>> getAllLeituras(@PathVariable Long ra) {
         List<LeituraDTO> dtos = service.getAllLeituras(ra);
         return ResponseEntity.ok(dtos);
     }
 
-    @PostMapping(value = "{ra}/tutoria")
+    @PostMapping(value = "/{ra}/tutoria")
     public ResponseEntity<TutoriaDTO> addTutoria(@PathVariable Long ra, @RequestBody TutoriaDTO dto) {
         dto = service.addTutoria(ra, dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
         return ResponseEntity.created(uri).body(dto);
     }
 
-    @PostMapping(value = "{ra}/registroAtendimentos")
+    @PostMapping(value = "/{ra}/registroAtendimentos")
     public ResponseEntity<RegistroAtendimentoDTO> addRegistroAtendimento(@PathVariable Long ra, @RequestBody RegistroAtendimentoDTO dto) {
         dto = service.addRegistroAtendimento(ra, dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
         return ResponseEntity.created(uri).body(dto);
+    }
+
+    @GetMapping(value = "/{ra}/registroAtendimentos")
+    public ResponseEntity<List<RegistroAtendimentoDTO>> getRegistroAtendimento(@PathVariable Long ra) {
+        List<RegistroAtendimentoDTO> dto = service.getAllRegistroAtendimentos(ra);
+        return  ResponseEntity.ok(dto);
+    }
+
+    @PutMapping(value = "/{ra}/registroAtendimentos/{id}")
+    public ResponseEntity<?> updateAtendimentos(@PathVariable Long ra, @PathVariable Long id, @Valid @RequestBody RegistroAtendimentoDTO dto) {
+        dto = service.updateResgistroAtendimento(ra, id, dto);
+        return ResponseEntity.ok(dto);
     }
 }

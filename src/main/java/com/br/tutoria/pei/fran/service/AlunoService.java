@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AlunoService {
@@ -284,15 +285,58 @@ public class AlunoService {
     }
 
     @Transactional
+    public LeituraDTO updateLeitura(Long ra,Long idLeitura, LeituraDTO dto) {
+        Aluno aluno = repository.getReferenceById(ra);
+        Leitura leitura = leituraRepository.getReferenceById(idLeitura);
+
+        dtoToLeitura(leitura, dto);
+
+        leitura = leituraRepository.save(leitura);
+        return new LeituraDTO(leitura);
+    }
+
+    @Transactional
     public RegistroAtendimentoDTO addRegistroAtendimento (Long ra, RegistroAtendimentoDTO dto) {
         Aluno aluno = repository.getReferenceById(ra);
-        RegistroAtendimento atendimento = new RegistroAtendimento();
+
+        Optional<RegistroAtendimento> existente =
+                registroAtendimentoRepository.findByAlunoRaAndDataAndAssuntoAndObservacoesProfessor(
+                        ra,
+                        dto.getData(),
+                        dto.getAssunto(),
+                        dto.getObservacoesProfessor()
+                );
+        RegistroAtendimento atendimento;
+
+        if (existente.isPresent()) {
+            atendimento = existente.get();
+            dtoToRegistro(atendimento, dto);
+        } else {
+            atendimento = new RegistroAtendimento();
+            dtoToRegistro(atendimento, dto);
+
+            atendimento.setAluno(aluno);
+            aluno.addRegistroAtendimento(atendimento);
+        }
+        return new RegistroAtendimentoDTO(atendimento);
+    }
+
+    @Transactional
+    public RegistroAtendimentoDTO updateResgistroAtendimento(Long ra,Long idAtendimento, RegistroAtendimentoDTO dto) {
+        Aluno aluno = repository.getReferenceById(ra);
+        RegistroAtendimento atendimento = registroAtendimentoRepository.getReferenceById(idAtendimento);
 
         dtoToRegistro(atendimento, dto);
-        atendimento.setAluno(aluno);
-        aluno.addRegistroAtendimento(atendimento);
 
+        atendimento = registroAtendimentoRepository.save(atendimento);
         return new RegistroAtendimentoDTO(atendimento);
+    }
+
+    @Transactional(readOnly = true)
+    public List<RegistroAtendimentoDTO> getAllRegistroAtendimentos(Long ra) {
+        Aluno aluno = repository.findById(ra).orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado"));
+
+        return aluno.getRegistroAtendimentos().stream().map(RegistroAtendimentoDTO::new).toList();
     }
 
     @Transactional

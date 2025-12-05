@@ -8,8 +8,6 @@ import java.time.LocalDate;
 
 public class AlunoDTO {
 
-    @Digits(integer = 13, fraction = 0, message = "O RA deve ter exatamente 13 dígitos")
-    @NotNull(message = "Campo requerido")
     private Long ra;
     @NotBlank(message = "Campo requerido")
     private String nome;

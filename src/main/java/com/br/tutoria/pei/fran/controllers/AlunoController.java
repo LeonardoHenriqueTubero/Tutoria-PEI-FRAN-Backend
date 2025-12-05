@@ -2,6 +2,7 @@ package com.br.tutoria.pei.fran.controllers;
 
 import com.br.tutoria.pei.fran.dtos.*;
 import com.br.tutoria.pei.fran.entities.Aluno;
+import com.br.tutoria.pei.fran.entities.DadosFamilia;
 import com.br.tutoria.pei.fran.entities.Usuario;
 import com.br.tutoria.pei.fran.repository.AlunoRepository;
 import com.br.tutoria.pei.fran.repository.UsuarioRepository;
@@ -109,7 +110,7 @@ public class AlunoController {
     @PutMapping(value = "/{ra}")
     public ResponseEntity<AlunoDTO> update(@PathVariable Long ra, @Valid @RequestBody AlunoDTO dto) {
         dto = service.update(ra, dto);
-        return ResponseEntity.ok(dto);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping(value = "/{ra}")
@@ -199,6 +200,18 @@ public class AlunoController {
         return ResponseEntity.created(uri).body(dto);
     }
 
+    @GetMapping(value = "/{ra}/tutoria")
+    public ResponseEntity<List<TutoriaDTO>> getAllTutorias(@PathVariable Long ra) {
+        List<TutoriaDTO> dtos = service.getAllTutorias(ra);
+        return ResponseEntity.ok(dtos);
+    }
+
+    @PutMapping(value = "/{ra}/tutoria/{id}")
+    public ResponseEntity<?> updateTutoria(@PathVariable Long ra, @PathVariable Long id, @RequestBody TutoriaDTO dto) {
+        TutoriaDTO update =  service.updateTutoria(ra, id, dto);
+        return ResponseEntity.ok(update);
+    }
+
     @PostMapping(value = "/{ra}/registroAtendimentos")
     public ResponseEntity<RegistroAtendimentoDTO> addRegistroAtendimento(@PathVariable Long ra, @RequestBody RegistroAtendimentoDTO dto) {
         dto = service.addRegistroAtendimento(ra, dto);
@@ -215,6 +228,30 @@ public class AlunoController {
     @PutMapping(value = "/{ra}/registroAtendimentos/{id}")
     public ResponseEntity<?> updateAtendimentos(@PathVariable Long ra, @PathVariable Long id, @Valid @RequestBody RegistroAtendimentoDTO dto) {
         dto = service.updateResgistroAtendimento(ra, id, dto);
+        return ResponseEntity.ok(dto);
+    }
+
+    @PostMapping(value = "/{ra}/dadosFamilia")
+    public ResponseEntity<DadosFamiliaDTO> addDadosFamilia(@PathVariable Long ra, @RequestBody DadosFamiliaDTO dtos) {
+        dtos = service.addDadosFamilia(ra, dtos);
+        return ResponseEntity.ok(dtos);
+    }
+
+    @GetMapping(value = "/{ra}/dadosFamilia")
+    public ResponseEntity<DadosFamiliaDTO> getDadosFamilia(@PathVariable Long ra) {
+        DadosFamiliaDTO dto = service.getAllDadosFamilia(ra);
+        return ResponseEntity.ok(dto);
+    }
+
+    @PostMapping(value="/{ra}/escolaridade")
+    public ResponseEntity<EscolaridadeDTO> addEscolaridade(@PathVariable Long ra, @RequestBody EscolaridadeDTO dto) {
+        dto = service.addEscolaridade(ra, dto);
+        return ResponseEntity.ok(dto);
+    }
+
+    @GetMapping(value = "/{ra}/escolaridade")
+    public ResponseEntity<EscolaridadeDTO> getEscolaridade(@PathVariable Long ra) {
+        EscolaridadeDTO dto = service.getAllEscolaridade(ra);
         return ResponseEntity.ok(dto);
     }
 }

@@ -109,17 +109,12 @@ public class AlunoService {
     @Transactional
     public AlunoDTO update(Long ra, AlunoDTO dto) {
         Aluno aluno = repository.getReferenceById(ra);
-        DadosFamilia familia = dadosFamiliarepository.getReferenceById(aluno.getDadoFamilia().getId());
-        Escolaridade escolaridade = escolaridadeRepository.getReferenceById(aluno.getEscolaridade().getId());
 
         dtoToEntity(dto, aluno);
-        setDadosFamilia(familia, dto);
-        setEscolaridade(escolaridade, dto);
-
         aluno = repository.save(aluno);
-        aluno.getDadoFamilia().getAlunos().forEach(System.out::println);
         return new AlunoDTO(aluno);
     }
+
     @Transactional(readOnly = true)
     public List<AlunoMinDTO> getAllNames() {
         return repository.getAllNames();
@@ -132,27 +127,10 @@ public class AlunoService {
         return new AlunoDTO(aluno);
     }
 
-    @Transactional(propagation = Propagation.SUPPORTS)
+    @Transactional
     public void delete(Long ra) {
-        if (!repository.existsById(ra)) {
-            throw new ResourceNotFoundException("Recurso não encontrado");
-        }
-        try {
-            Aluno aluno = repository.findById(ra).get();
-
-            DadosFamilia familia = dadosFamiliarepository.findFamiliaByIdWithAluno(aluno.getDadoFamilia().getId());
-
-            familia.getAlunos().remove(aluno);
-            aluno.setDadoFamilia(null);
-            if (familia.getAlunos().isEmpty()) {
-                dadosFamiliarepository.delete(familia);
-            }
-
-            repository.deleteById(ra);
-        }
-        catch (DataIntegrityViolationException e) {
-            throw new DatabaseException("Erro de integridade violada");
-        }
+        Aluno aluno = repository.findById(ra).orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado"));
+        repository.delete(aluno);
     }
 
     @Transactional
@@ -342,16 +320,91 @@ public class AlunoService {
     @Transactional
     public TutoriaDTO addTutoria(Long ra, TutoriaDTO dto){
         Aluno aluno = repository.getReferenceById(ra);
-        Tutoria tutoria = new Tutoria();
 
-        dtoToTutoria(tutoria, dto);
-        tutoria.setAluno(aluno);
-        aluno.addTutoria(tutoria);
+        Optional<Tutoria> existe =
+                tutoriaRepository.findByIdAndDataAndTarefaCMSPAndRedacaoAndLeituraAndProvaPaulistaAndAvaliacoesAndDificuldadesAndOutrosAndObservacoesProfessor(
+                        ra,
+                        dto.getData(),
+                        dto.getTarefaCMSP(),
+                        dto.getRedacao(),
+                        dto.getLeitura(),
+                        dto.getProvaPaulista(),
+                        dto.getAvaliacoes(),
+                        dto.getDificuldades(),
+                        dto.getOutros(),
+                        dto.getObservacoesProfessor()
+                );
+        Tutoria tutoria;
 
+        if (existe.isPresent()) {
+            tutoria = existe.get();
+            dtoToTutoria(tutoria, dto);
+        } else {
+            tutoria = new Tutoria();
+            dtoToTutoria(tutoria, dto);
+
+            tutoria.setAluno(aluno);
+            aluno.addTutoria(tutoria);
+        }
         return new TutoriaDTO(tutoria);
     }
+
+    @Transactional(readOnly = true)
+    public List<TutoriaDTO> getAllTutorias(Long ra) {
+        Aluno aluno = repository.getReferenceById(ra);
+        return aluno.getTutorias().stream().map(TutoriaDTO::new).toList();
+    }
+
+    @Transactional
+    public TutoriaDTO updateTutoria(Long ra, Long id, TutoriaDTO dto) {
+        Aluno aluno = repository.getReferenceById(ra);
+        Tutoria tutoria = tutoriaRepository.getReferenceById(id);
+
+        dtoToTutoria(tutoria, dto);
+
+        tutoria = tutoriaRepository.save(tutoria);
+        return new TutoriaDTO(tutoria);
+    }
+
+    @Transactional
+    public DadosFamiliaDTO addDadosFamilia(Long ra, DadosFamiliaDTO dto) {
+        Aluno aluno = repository.getReferenceById(ra);
+        DadosFamilia dadosFamilia = new DadosFamilia();
+
+        dtoToDadosFamilia(dadosFamilia, dto);
+        dadosFamilia.addAlunos(aluno);
+        aluno.setDadoFamilia(dadosFamilia);
+
+        return new DadosFamiliaDTO(dadosFamilia);
+    }
+
+    @Transactional(readOnly = true)
+    public DadosFamiliaDTO getAllDadosFamilia(Long ra) {
+        Aluno aluno = repository.findById(ra).orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado"));
+
+        return new DadosFamiliaDTO(aluno.getDadoFamilia());
+    }
+
+    @Transactional
+    public EscolaridadeDTO addEscolaridade(Long ra, EscolaridadeDTO dto) {
+        Aluno aluno = repository.getReferenceById(ra);
+        Escolaridade escolaridade = new Escolaridade();
+
+        dtoToEscolaridade(escolaridade, dto);
+        escolaridade.setAluno(aluno);
+        aluno.setEscolaridade(escolaridade);
+
+        return new EscolaridadeDTO(escolaridade);
+    }
+
+    @Transactional(readOnly = true)
+    public EscolaridadeDTO getAllEscolaridade(Long ra) {
+        Aluno aluno = repository.findById(ra).orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado"));
+
+        return new EscolaridadeDTO(aluno.getEscolaridade());
+    }
+
     private void dtoToEntity(AlunoDTO dto, Aluno entity) {
-        entity.setRa(dto.getRa());
         entity.setNome(dto.getNome());
         entity.setEmail(dto.getEmail());
         entity.setDataNasc(dto.getDataNasc());
@@ -440,5 +493,33 @@ public class AlunoService {
         tutoria.setDificuldades(dto.getDificuldades());
         tutoria.setOutros(dto.getOutros());
         tutoria.setObservacoesProfessor(dto.getObservacoesProfessor());
+    }
+
+    private static void dtoToDadosFamilia(DadosFamilia familia, DadosFamiliaDTO dto) {
+        familia.setPai(dto.getPai());
+        familia.setMae(dto.getMae());
+        familia.setResponsavel(dto.getResponsavel());
+        familia.setEstruturaFamiliar(dto.getEstruturaFamiliar());
+        familia.setNumPai(dto.getNumPai());
+        familia.setNumMae(dto.getNumMae());
+        familia.setNumResponsavel(dto.getNumResponsavel());
+    }
+
+
+    private static void dtoToEscolaridade(Escolaridade escolaridade, EscolaridadeDTO dto) {
+        escolaridade.setContatoFora(dto.getContatoFora());
+        escolaridade.setDifAprendizagem(dto.getDifAprendizagem());
+        escolaridade.setApoioPedagogico(dto.getApoioPedagogico());
+        escolaridade.setAtividadeExtra(dto.getAtividadeExtra());
+        escolaridade.setDifLocomotiva(dto.getDifLocomotiva());
+        escolaridade.setDifVisao(dto.getDifVisao());
+        escolaridade.setDifAtencao(dto.getDifAtencao());
+        escolaridade.setDifFala(dto.getDifFala());
+        escolaridade.setDifEscrita(dto.getDifEscrita());
+        escolaridade.setAdaptacaoGrupo(dto.getAdaptacaoGrupo());
+        escolaridade.setReprovado(dto.getReprovado());
+        escolaridade.setSerieAnoReprovado(dto.getSerieAnoReprovado());
+        escolaridade.setDisciplinasDificuldade(dto.getDisciplinasDificuldade());
+        escolaridade.setDisciplinasFacilidade(dto.getDisciplinasFacilidade());
     }
 }
